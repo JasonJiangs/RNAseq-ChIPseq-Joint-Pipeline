@@ -18,11 +18,11 @@ def main():
     # create controller
     ctrl = Controller(parameters=parameters, logger=logger)
 
-    logger.write_log("Finish loading parameters, start to execute.", parameters['config_dict']['resultdestination']['log'])
+    logger.write_log(ctrl, "Finish loading parameters, start to execute.")
 
     ctrl.execute()
 
-    logger.write_log("Finish executing.", parameters['config_dict']['resultdestination']['log'])
+    logger.write_log(ctrl, "Finish executing.")
 
 
 if __name__ == '__main__':
