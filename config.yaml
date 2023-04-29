@@ -1,0 +1,16 @@
+# it should take the directory
+# mapping-index: mapping indexes for bowtie2, bwa, hisat2, salmon, star
+# annotation: gene annotation for hisat2, stringtie, cufflinks (.gtf, .gff, and .bed)
+datasource:
+  rna-seq: /path/to/rna-seq
+  chip-seq: /path/to/chip-seq
+  mapping-index: /path/to/mapping-index
+  annotation: /path/to/annotation
+
+resultdestination:
+  rna-seq: /path/to/rna-seq-results
+  chip-seq: /path/to/chip-seq-results
+  joint-analysis: /path/to/joint-analysis-results
+  modeling: /path/to/modeling-results
+  log: /path/to/log
+
