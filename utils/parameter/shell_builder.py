@@ -36,10 +36,6 @@ def path_builder(dir_path, file_name, suffix):
     return dir_path + file_name + suffix
 
 
-def slurm_script():
-    return
-
-
 def shell_runner(execution_path, ctrl):
     ctrl.logger.write_log(ctrl, "Start executing shell script: " + execution_path)
     signal = os.system(execution_path)
@@ -47,13 +43,26 @@ def shell_runner(execution_path, ctrl):
         ctrl.logger.write_log(ctrl, "Error: shell script execution failed.")
     return
 
+
 def dir_builder(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
     return
 
-def paired_end_processor(ctrl, paired_end):
-    if paired_end == 'y':
-        return '-1 ' + ctrl.parameters['rnaseq_source']['fastq1'] + ' -2 ' + ctrl.parameters['rnaseq_source']['fastq2']
+
+def paired_end_processor(od_list):
+    nw_list = []
+    for i in range(len(od_list)):
+        nw_list.append(od_list[i] + '_1')
+        nw_list.append(od_list[i] + '_2')
+    return nw_list
+
+def loop_concatanator(pe, od_list):
+    file_str = ''
+    if pe == 'y':
+        nw_list = paired_end_processor(od_list)
+        file_str = file_str.join(nw_list)
     else:
-        return '-U ' + ctrl.parameters['rnaseq_source']['fastq1']
+        file_str = file_str.join(od_list)
+    return file_str
+

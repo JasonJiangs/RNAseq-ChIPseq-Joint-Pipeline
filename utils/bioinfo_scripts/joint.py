@@ -1,4 +1,4 @@
-from utils.parameter.shell_builder import general_shell_builder, shell_runner, dir_builder
+from utils.parameter.shell_builder import *
 
 
 class Joint():
@@ -32,15 +32,7 @@ def fastqc(ctrl, condition):
 
     general_shell_builder(ctrl.slurm, script_path, log_path, module_list, file_name)
 
-    chipseq_file_str = ' '
-    if chipseq_ctrl.source_path['paired-end'] == 'y':
-        nw_list = []
-        for i in range(len(chipseq_ctrl.source_path['files'])):
-            nw_list.append(chipseq_ctrl.source_path['files'][i]+'_1')
-            nw_list.append(chipseq_ctrl.source_path['files'][i]+'_2')
-        chipseq_file_str = chipseq_file_str.join(nw_list)
-    else:
-        chipseq_file_str = chipseq_file_str.join(chipseq_ctrl.source_path['files'])
+    chipseq_file_str = loop_concatanator(chipseq_ctrl.source_path['paired-end'], chipseq_ctrl.source_path['files'])
     shell_file = open(script_path, 'a')
     shell_file.write('for i in ' + chipseq_file_str + '\n')
     shell_file.write('do\n')
@@ -49,15 +41,7 @@ def fastqc(ctrl, condition):
     shell_file.write('done\n')
     dir_builder(joint_ctrl.qc_path + condition + '/')
 
-    rnaseq_file_str = ' '
-    if rnaseq_ctrl.source_path['paired-end'] == 'y':
-        nw_list = []
-        for i in range(len(rnaseq_ctrl.source_path['files'])):
-            nw_list.append(rnaseq_ctrl.source_path['files'][i]+'_1')
-            nw_list.append(rnaseq_ctrl.source_path['files'][i]+'_2')
-        rnaseq_file_str = rnaseq_file_str.join(nw_list)
-    else:
-        rnaseq_file_str = rnaseq_file_str.join(rnaseq_ctrl.source_path['files'])
+    rnaseq_file_str = loop_concatanator(rnaseq_ctrl.source_path['paired-end'], rnaseq_ctrl.source_path['files'])
     shell_file.write('for i in ' + rnaseq_file_str + '\n')
     shell_file.write('do\n')
     shell_file.write('fastqc -f ' + file_format + ' -o ' + joint_ctrl.qc_path + condition + '/ ' +

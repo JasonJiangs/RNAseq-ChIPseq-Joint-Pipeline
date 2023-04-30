@@ -1,9 +1,9 @@
 import os
 import yaml
 
-def load_parameters(config, quality_control, model):
+def load_parameters(config, phase, model):
     parameters = load_defaults()
-    if config is None and quality_control is None and model is None:
+    if config is None and phase is None and model is None:
         return parameters
 
     if config is not None:
@@ -14,8 +14,8 @@ def load_parameters(config, quality_control, model):
             except yaml.YAMLError as exc:
                 print(exc)
 
-    if quality_control is not None:
-        parameters['quality_control'] = quality_control
+    if phase is not None:
+        parameters['phase'] = phase
 
     if model is not None:
         parameters['model'] = model
@@ -34,7 +34,7 @@ def load_defaults():
                   },
              'resultdestination': '/scratch/pfq7pm/test_pipeline/proj_result'
              },
-        "quality_control": "oa",
+        "phase": "1",
         "model": "cr"
     }
     return parameters

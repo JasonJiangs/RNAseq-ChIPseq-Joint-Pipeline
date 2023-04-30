@@ -9,7 +9,7 @@ class Controller():
     def __init__(self, parameters, logger):
         self.parameters = parameters
         self.model = parameters['model']
-        self.quality_control = parameters['quality_control']
+        self.phase = parameters['phase']
         self.logger = logger
         self.rnaseq_source = None
         self.chipseq_source = None
@@ -25,26 +25,55 @@ class Controller():
         # parse source file paths
         source_file_parser(self)
 
-        if self.quality_control == 'o':
-            self.logger.write_log(self, "Start quality control.")
+        if self.phase == '1':
+            self.logger.write_log(self, "Start to run phase 1.")
+            # phase 1
+            phase1_execution(self)
+            self.logger.write_log(self, "End to run phase 1.")
 
-            # quality control before read alignment
-            fastqc(self, 'before')
-            # read alignment
-            bowtie2(self)
-            hisat2(self)
-            # quality control after read alignment
-            fastqc(self, 'after')
+        elif self.phase == '12':
+            self.logger.write_log(self, "Start to run phase 12.")
+            phase1_execution(self)
+            phase2_execution(self)
+            self.logger.write_log(self, "End to run phase 12.")
 
-            self.logger.write_log(self, "Finish quality control.")
-        elif self.quality_control == 'a':
-            self.logger.write_log(self, "Start workflows after quality control.")
+        elif self.phase == '123':
+            self.logger.write_log(self, "Start to run phase 123.")
+            phase1_execution(self)
+            phase2_execution(self)
+            phase3_execution(self)
+            self.logger.write_log(self, "End to run phase 123")
 
-            self.logger.write_log(self, "End workflows after quality control.")
-        elif self.quality_control == 'oa':
-            self.logger.write_log(self, "Start the whole workflow.")
-            fastqc(self)
+        elif self.phase == '2':
+            self.logger.write_log(self, "Start to run phase 2.")
+            phase2_execution(self)
+            self.logger.write_log(self, "End to run phase 2.")
 
-            self.logger.write_log(self, "Finish the whole workflow.")
+        elif self.phase == '3':
+            self.logger.write_log(self, "Start to run phase 3.")
+            phase3_execution(self)
+            self.logger.write_log(self, "End to run phase 3.")
+
         else:
-            self.logger.write_log(self, "Exit.")
+            self.logger.write_log(self, "Invalid phase number.")
+            exit(1)
+
+
+def phase1_execution(ctrl):
+    # quality control before read alignment
+    fastqc(ctrl, 'before')
+    # read alignment
+    bowtie2(ctrl)
+    hisat2(ctrl)
+    # quality control after read alignment
+    fastqc(ctrl, 'after')
+
+def phase2_execution(ctrl):
+    samtools(ctrl)
+    pass
+
+def phase3_execution(ctrl):
+    pass
+
+def model_execution(ctrl):
+    pass

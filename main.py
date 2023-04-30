@@ -11,10 +11,10 @@ def main():
     # intake command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", dest='config', help="Config file path")
-    parser.add_argument("-qc", dest='quality_control', help="quality control running choice")
+    parser.add_argument("-p", dest='phase', help="choose which phase to run")
     parser.add_argument("-m", dest='model', help="Model running choice")
     args = parser.parse_args()
-    parameters = load_parameters(args.config, args.quality_control, args.model)
+    parameters = load_parameters(args.config, args.phase, args.model)
 
     # create logger
     logger = Logger()

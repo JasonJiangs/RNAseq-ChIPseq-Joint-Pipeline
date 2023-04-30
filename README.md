@@ -17,7 +17,8 @@ git clone
 There is no instruction for installing the required packages, only the versions of the packages are listed.
 #### Python packages
 ```
-pip install -r pyrequirements.txt
+pipreqs . --force
+pip install -r requirements.txt
 ``` 
 #### R packages
 ```
@@ -101,10 +102,23 @@ joint:
     -  `o`: Only run the quality control workflow.
     -  `a`: Run the rest of the workflow except for the quality control workflow.
     - `oa`: Run the whole workflow.
+
+
+- `-c`: get the configuration file path
+- `-p`: multiple phases you can choose to run.
+  - `1`: Run quality control (read alignment and fastqc before and after).
+  - `2`: Run quality check like mappability, replicate correlation check, and duplicate rate.
+  - `3`: Run rest of the RNA-seq and ChIP-seq process and joint analysis.
 - `-m`: choose to do some modeling analysis
-    - `c`: Run the clustering analysis.
-    - `r`: Run the regression analysis.
-    - `cr`: Run the clustering and regression analysis.
+  - `c`: Run the clustering analysis.
+  - `r`: Run the regression analysis.
+  - `cr`: Run the clustering and regression analysis.
+
+#### Instructions
+If you choose to run with  `-p 1` and check the quality control report is just fine. You want to keep the following process
+running, you can just run with `-p 2`. The same logic when you want to keep run the phase 3 code.
+Also, if you want run the whole workflow, you can just run with `-p 123`.
+
 
 Sample command (Whole workflow):
 ```

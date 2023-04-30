@@ -9,8 +9,9 @@ datasource:
       - LNCaP_DHT_RNA_rep2
       - LNCaP_Veh_RNA_rep1
       - LNCaP_Veh_RNA_rep2
+    # if paired-end, y, then: LNCaP_DHT_RNA_rep1 -> LNCaP_DHT_RNA_rep1_1.fastq.gz, LNCaP_DHT_RNA_rep1_2.fastq.gz
     paired-end: y
-    suffix: .fastq.gz
+    suffix: .fastq.gz # fastq.gz only supported for now
   chip-seq:
     dir_path: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
     files:
@@ -19,9 +20,9 @@ datasource:
       - LNCaP_Veh_AR_1
       - LNCaP_Veh_AR_2
     paired-end: n
-    suffix: .fastq.gz  # fastq.gz only for now
-  mapping-index: /path/to/mapping-index
-  annotation: /path/to/annotation
+    suffix: .fastq.gz  # fastq.gz only supported for now
+  mapping-index: /nv/vol190/zanglab/zw5j/data/index/
+  annotation: /nv/vol190/zanglab/shared/StudentTestData/annotation/
 
 resultdestination: /scratch/pfq7pm/test_pipeline/proj_result
 
