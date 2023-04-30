@@ -1,4 +1,3 @@
-from platform import system
 import os
 import yaml
 
@@ -33,17 +32,10 @@ def load_defaults():
                   'mapping-index': '/path/to/mapping-index',
                   'annotation': '/path/to/annotation'
                   },
-             'resultdestination':
-                 {'rna-seq': '/path/to/rna-seq-results',
-                  'chip-seq': '/path/to/chip-seq-results',
-                  'joint-analysis': '/path/to/joint-analysis-results',
-                  'modeling': '/path/to/modeling-results',
-                  'log': '/path/to/log'}
+             'resultdestination': '/scratch/pfq7pm/test_pipeline/proj_result'
              },
         "quality_control": "oa",
-        "model": "cr",
-        "OS": system(),
-        "sys_path": os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        "model": "cr"
     }
     return parameters
 

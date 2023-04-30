@@ -15,8 +15,11 @@ class Controller():
         self.chipseq_source = None
         self.mapping_index_source = None
         self.annotation_source = None
-        self.rnaseq_controller = RNASeq()
-        self.chipseq_controller = Chipseq()
+        self.rnaseq_controller = RNASeq(parameters['config_dict']['datasource']['rna-seq'], parameters['config_dict']['rnaseq'])
+        self.chipseq_controller = Chipseq(parameters['config_dict']['datasource']['chip-seq'], parameters['config_dict']['chipseq'])
+        self.joint_controller = Joint(parameters['config_dict']['joint'])
+        self.slurm = parameters['config_dict']['slurm']
+        self.base_path = parameters['config_dict']['resultdestination']
 
     def execute(self):
         # parse source file paths
@@ -26,12 +29,12 @@ class Controller():
             self.logger.write_log(self, "Start quality control.")
 
             # quality control before read alignment
-            fastqc(self)
+            fastqc(self, 'before')
             # read alignment
             bowtie2(self)
             hisat2(self)
             # quality control after read alignment
-            fastqc(self)
+            fastqc(self, 'after')
 
             self.logger.write_log(self, "Finish quality control.")
         elif self.quality_control == 'a':

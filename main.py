@@ -3,6 +3,10 @@ from utils.parameter.Parser import load_parameters
 from controller import Controller
 from utils.logger.logger import Logger
 
+# debug mode under linux
+# import pdb
+# pdb.set_trace()
+
 def main():
     # intake command line arguments
     parser = argparse.ArgumentParser()
@@ -14,6 +18,8 @@ def main():
 
     # create logger
     logger = Logger()
+
+    logger.write_log(None, "Start loading parameters.")
 
     # create controller
     ctrl = Controller(parameters=parameters, logger=logger)

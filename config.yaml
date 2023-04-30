@@ -3,7 +3,7 @@
 # annotation: gene annotation for hisat2, stringtie, cufflinks (.gtf, .gff, and .bed)
 datasource:
   rna-seq:
-    dir_path: /path/to/rna-seq/
+    dir_path: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
     files:
       - LNCaP_DHT_RNA_rep1
       - LNCaP_DHT_RNA_rep2
@@ -12,32 +12,34 @@ datasource:
     paired-end: y
     suffix: .fastq.gz
   chip-seq:
-    dir_path: /path/to/chip-seq/
+    dir_path: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
     files:
       - LNCaP_DHT_AR_1
       - LNCaP_DHT_AR_2
       - LNCaP_Veh_AR_1
       - LNCaP_Veh_AR_2
     paired-end: n
-    suffix: .fastq.gz
+    suffix: .fastq.gz  # fastq.gz only for now
   mapping-index: /path/to/mapping-index
   annotation: /path/to/annotation
 
-resultdestination:
-  rna-seq: /path/to/rna-seq-results
-  chip-seq: /path/to/chip-seq-results
-  joint-analysis: /path/to/joint-analysis-results
-  modeling: /path/to/modeling-results
-  log: /path/to/log
+resultdestination: /scratch/pfq7pm/test_pipeline/proj_result
+
+slurm:
+  partition: standard
+  time: '72:00:00'
+  mem: 64G
+  cpus-per-task: 8
+  A: zanglab
 
 rnaseq:
   bowtie2:
-    -p: 16
+    -p: 8
     -t: y
 
 chipseq:
   hisat2:
-    -p: 16
+    -p: 8
 
 joint:
   fastqc:
@@ -47,7 +49,7 @@ joint:
     view:
       -b: y
       -S: y
-      -@: 16
+      -@: 8
     sort:
-      -@: 16
+      -@: 8
     index: y
