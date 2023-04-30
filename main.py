@@ -3,6 +3,7 @@ from utils.parameter.Parser import load_parameters
 from controller import Controller
 from utils.logger.logger import Logger
 
+
 # debug mode under linux
 # import pdb
 # pdb.set_trace()
@@ -17,18 +18,18 @@ def main():
     parameters = load_parameters(args.config, args.phase, args.model)
 
     # create logger
-    logger = Logger()
+    logger = Logger(parameters['config_dict']['resultdestination'])
 
-    logger.write_log(None, "Start loading parameters.")
+    logger.write_log("Start loading parameters.")
 
     # create controller
     ctrl = Controller(parameters=parameters, logger=logger)
 
-    logger.write_log(ctrl, "Finish loading parameters, start to execute.")
+    logger.write_log("Finish loading parameters, start to execute.")
 
     ctrl.execute()
 
-    logger.write_log(ctrl, "Finish executing.")
+    logger.write_log("Finish executing.")
 
 
 if __name__ == '__main__':

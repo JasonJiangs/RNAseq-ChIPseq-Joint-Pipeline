@@ -1,3 +1,6 @@
+# Choose only to do script generation
+script-only: y
+
 # it should take the directory
 # mapping-index: mapping indexes for bowtie2, bwa, hisat2, salmon, star
 # annotation: gene annotation for hisat2, stringtie, cufflinks (.gtf, .gff, and .bed)
@@ -9,9 +12,9 @@ datasource:
       - LNCaP_DHT_RNA_rep2
       - LNCaP_Veh_RNA_rep1
       - LNCaP_Veh_RNA_rep2
-    # if paired-end, y, then: LNCaP_DHT_RNA_rep1 -> LNCaP_DHT_RNA_rep1_1.fastq.gz, LNCaP_DHT_RNA_rep1_2.fastq.gz
+    # if paired-end is y, then LNCaP_DHT_RNA_rep1 -> LNCaP_DHT_RNA_rep1_1.fastq.gz, LNCaP_DHT_RNA_rep1_2.fastq.gz
     paired-end: y
-    suffix: .fastq.gz # fastq.gz only supported for now
+    suffix: .fastq.gz # fastq.gz supported only for now
   chip-seq:
     dir_path: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
     files:
@@ -19,13 +22,17 @@ datasource:
       - LNCaP_DHT_AR_2
       - LNCaP_Veh_AR_1
       - LNCaP_Veh_AR_2
+    # if paired-end is n, then LNCaP_DHT_AR_1 -> LNCaP_DHT_AR_1.fastq.gz
     paired-end: n
-    suffix: .fastq.gz  # fastq.gz only supported for now
+    suffix: .fastq.gz  # fastq.gz supported only for now
+  # e.g.: Storing bowtie2 index inside as a subdirectory in name of bowtie2_index.
   mapping-index: /nv/vol190/zanglab/zw5j/data/index/
   annotation: /nv/vol190/zanglab/shared/StudentTestData/annotation/
 
+# Root directory for the results
 resultdestination: /scratch/pfq7pm/test_pipeline/proj_result
 
+# slurm configuration
 slurm:
   partition: standard
   time: '72:00:00'
@@ -34,15 +41,18 @@ slurm:
   A: zanglab
 
 rnaseq:
+  # read alignment
   bowtie2:
     -p: 8
     -t: y
 
 chipseq:
+  # read alignment
   hisat2:
     -p: 8
 
 joint:
+  # quality control
   fastqc:
     -f: fastq
   # .sam file conversion, sorting, indexing

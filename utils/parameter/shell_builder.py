@@ -37,11 +37,12 @@ def path_builder(dir_path, file_name, suffix):
 
 
 def shell_runner(execution_path, ctrl):
-    ctrl.logger.write_log(ctrl, "Start executing shell script: " + execution_path)
+    ctrl.logger.write_log(ctrl, "Submit shell script to slurm: " + execution_path)
     signal = os.system(execution_path)
     if signal != 0:
         ctrl.logger.write_log(ctrl, "Error: shell script execution failed.")
-    return
+        print("Error: shell script execution failed.")
+        exit(1)
 
 
 def dir_builder(dir_path):
@@ -57,12 +58,12 @@ def paired_end_processor(od_list):
         nw_list.append(od_list[i] + '_2')
     return nw_list
 
+
 def loop_concatanator(pe, od_list):
-    file_str = ''
+    file_str = ' '
     if pe == 'y':
         nw_list = paired_end_processor(od_list)
         file_str = file_str.join(nw_list)
     else:
         file_str = file_str.join(od_list)
     return file_str
-

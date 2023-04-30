@@ -1,6 +1,7 @@
 import os
 import yaml
 
+
 def load_parameters(config, phase, model):
     parameters = load_defaults()
     if config is None and phase is None and model is None:
@@ -105,4 +106,3 @@ def source_file_parser(ctrl):
     ctrl.chipseq_source = chip_seq_source
     ctrl.mapping_index_source = mapping_index_source
     ctrl.annotation_source = annotation_source
-
