@@ -16,11 +16,31 @@ class Chipseq():
         logger.parameter_log('------------------ Chipseq Load Finish ------------------')
 
     def bowtie2(self, ctrl, script_only):
+        paired_end = ctrl.parameter['config_dict']['datasource']['chip-seq']['paired-end']
+        script_path = self.bowtie2_path + 'bowtie2.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'bowtie2'], 'bowtie2_result')
 
-        pass
+        if paired_end == 'y':
+            pass
+        else:
+            pass
+
+        if script_only == 'n':
+            ctrl.logger.write_log('Start executing shell script: ' + script_path)
+            linux_command = 'sbatch ' + script_path
+            shell_runner(linux_command, ctrl)
+            ctrl.logger.write_log('Finish executing shell script: ' + script_path)
+
 
     def macs2(self, ctrl, script_only):
-        pass
+        script_path = self.macs2_path + 'macs2.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'macs2'], 'macs2_result')
 
+
+        if script_only == 'n':
+            ctrl.logger.write_log('Start executing shell script: ' + script_path)
+            linux_command = 'sbatch ' + script_path
+            shell_runner(linux_command, ctrl)
+            ctrl.logger.write_log('Finish executing shell script: ' + script_path)
 
 

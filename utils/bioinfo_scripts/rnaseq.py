@@ -23,10 +23,35 @@ class RNASeq():
 
 
     def hisat2(self, ctrl, script_only):
-        pass
+        paired_end = ctrl.parameter['config_dict']['datasource']['rna-seq']['paired-end']
+        script_path = self.hisat2_path + 'hisat2.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
+                              ['gcc', 'hisat2'], 'hisat2_result' )
+
+        if paired_end == 'y':
+            pass
+        else:
+            pass
+
+        if script_only == 'n':
+            ctrl.logger.write_log('Start executing shell script: ' + script_path)
+            linux_command = 'sbatch ' + script_path
+            shell_runner(linux_command, ctrl)
+            ctrl.logger.write_log('Finish executing shell script: ' + script_path)
+        else:
+            ctrl.logger.write_log('Only script is generated: ' + script_path)
+
 
     def stringtie(self, ctrl, script_only):
-        pass
+        script_path = self.stringtie_path + 'stringtie.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
+                              ['gcc', 'stringtie'], 'stringtie_result' )
+
+        if script_only == 'n':
+            ctrl.logger.write_log('Start executing shell script: ' + script_path)
+            linux_command = 'sbatch ' + script_path
+            shell_runner(linux_command, ctrl)
+            ctrl.logger.write_log('Finish executing shell script: ' + script_path)
 
     def deseq2(self, ctrl, script_only):
         pass

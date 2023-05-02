@@ -30,6 +30,7 @@ datasource:
   annotation: /nv/vol190/zanglab/shared/StudentTestData/annotation/
 
 # Root directory for the results
+# TODO: add '/' at the end of the path
 resultdestination: /scratch/pfq7pm/test_pipeline/proj_result
 
 # slurm configuration

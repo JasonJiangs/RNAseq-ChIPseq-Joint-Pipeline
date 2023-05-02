@@ -31,6 +31,7 @@ def general_shell_builder(slurm, execution_path, log_path, module_list, file_nam
 
     shell_file.close()
 
+
 def total_log_general_shell_builder(total_log_path, slurm):
     # if exist, delete the old shell script
     if os.path.exists(total_log_path):
