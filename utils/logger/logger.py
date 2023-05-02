@@ -10,6 +10,7 @@ class Logger():
         logfile.write('Execution Log initialized ......\n')
         logfile.close()
 
+    # write log to file with time and print to console
     def write_log(self, data: str):
         # append write log to file
         log_file = open(self.path, 'a')
@@ -19,6 +20,7 @@ class Logger():
         log_file.close()
         print(data)
 
+    # write log to file without time
     def parameter_log(self, data: str):
         # append write log to file
         log_file = open(self.path, 'a')

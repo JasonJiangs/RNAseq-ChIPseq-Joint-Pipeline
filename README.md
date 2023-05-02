@@ -20,6 +20,7 @@ It is an extensible and modular pipeline combining RNA-seq and ChIP-seq tools, w
 ### 1. Download the repository
 ```
 git clone https://github.com/JasonJiangs/RNAseq-ChIPseq-Joint-Pipeline.git
+cd RNA-seq-ChIP-seq-Joint-Analysis
 ```
 
 ### 2. Install the required packages
@@ -32,16 +33,28 @@ pip install -r requirements.txt
 #### R packages
 ```
 ```
-#### Bioinformatics tools with Version
-```
-FastQC -- 
-Bowtie2 -- 
-Samtools --
-HTSeq --
-DESeq2 --
-CEAS --
-Bedtools --
-```
+#### Bioinformatics tools
+Those tools are required in the pipeline.
+
+Phase 1
+- [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
+- [hisat2](http://daehwankimlab.github.io/hisat2/)
+- [multiqc](https://multiqc.info/)
+
+Phase 2
+- [samtools](http://www.htslib.org/)
+- [picard](https://broadinstitute.github.io/picard/)
+- [deeptools](https://deeptools.readthedocs.io/en/develop/)
+- [bedtools](https://bedtools.readthedocs.io/en/latest/)
+
+Phase 3
+- [salmon](https://salmon.readthedocs.io/en/latest/)
+- [star]()
+- [stringtie](https://ccb.jhu.edu/software/stringtie/)
+- [cufflinks](http://cole-trapnell-lab.github.io/cufflinks/)
+- [macs2]()
+
 
 ### 3. Configure the configuration file
 The configuration file is `config.yaml`, in which you should store your datasource path and result path, 
@@ -89,6 +102,11 @@ slurm:
   cpus-per-task: 8
   A: zanglab
 
+# qc-toleration: number of files that can fail qc before the pipeline stops
+qc-toleration:
+  warn: 4
+  fail: 1
+  
 rnaseq:
   # read alignment
   bowtie2:
@@ -135,7 +153,6 @@ Also, if you want run the whole workflow, you can just run with `-p 123`.
 
 Sample command (full process):
 ```
-cd RNA-seq-ChIP-seq-Joint-Analysis
 python main.py -c config.yaml -p 123 -m cr
 ```
 ### 5. Result
@@ -148,9 +165,12 @@ You should appoint the storage path in the `config.yaml` file.
 ## Clarification
 ### Script-only mode
 Since the pipeline basically intake the configuration file and decode it into shell files that can run under
-slurm environment. You should make sure the environment setting is correct. Otherwise, you can just take the 
-generated scripts as a reference and run it on your own environment.
-When you config the `config.yaml` file with `script-only: y`, you should get only script in the result folder.
+slurm environment. You should make sure the environment setting is correct, since the pipeline uses `module load` to
+load the required packages.
+
+Otherwise, you can just take the generated scripts as a reference and run it on your own environment.
+When you config the `config.yaml` file with `script-only: y`, you should get only script in the result folder - you 
+can basically take it as a script generator.
 
 ### Script structure for script-only mode
 ```text

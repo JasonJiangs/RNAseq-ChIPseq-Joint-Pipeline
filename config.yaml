@@ -40,6 +40,11 @@ slurm:
   cpus-per-task: 8
   A: zanglab
 
+# qc-toleration: number of files that can fail qc before the pipeline stops
+qc-toleration:
+  warn: 4
+  fail: 1
+
 rnaseq:
   # read alignment
   bowtie2:

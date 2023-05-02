@@ -1,10 +1,8 @@
 from utils.parameter.Parser import source_file_parser
-from utils.parameter.shell_builder import dir_builder
-from utils.bioinfo_scripts.joint import Joint, fastqc, samtools
-from utils.bioinfo_scripts.chipseq import Chipseq, bowtie2
-from utils.bioinfo_scripts.rnaseq import RNASeq, hisat2
-from utils.clustering.cluster_model import Cluster
-from utils.regression.regression_model import Regression
+from utils.parameter.shell_builder import dir_builder, total_log_general_shell_builder
+from utils.bioinfo_scripts.joint import Joint
+from utils.bioinfo_scripts.chipseq import Chipseq
+from utils.bioinfo_scripts.rnaseq import RNASeq
 
 
 class Controller():
@@ -22,14 +20,17 @@ class Controller():
         self.base_path = parameters['config_dict']['resultdestination']
         self.slurm_log_path = self.base_path + '/result/shell_log/'
         self.rnaseq_controller = RNASeq(parameters['config_dict']['datasource']['rna-seq'],
-                                        parameters['config_dict']['rnaseq'], self.logger)
+                                        parameters['config_dict']['rnaseq'], self.base_path, self.logger)
         self.chipseq_controller = Chipseq(parameters['config_dict']['datasource']['chip-seq'],
-                                          parameters['config_dict']['chipseq'], self.logger)
+                                          parameters['config_dict']['chipseq'], self.base_path, self.logger)
         self.joint_controller = Joint(parameters['config_dict']['joint'], self.base_path, self.logger)
         self.slurm = parameters['config_dict']['slurm']
+        self.total_log = self.base_path + '/result/total_log.txt'
         source_file_parser(self)
         dir_builder(self.base_path)
         dir_builder(self.slurm_log_path)
+        dir_builder(self.total_log)
+        total_log_general_shell_builder(self.total_log, self.slurm)
         self.logger.parameter_log('model: ' + self.model)
         self.logger.parameter_log('phase: ' + self.phase)
         self.logger.parameter_log('rnaseq_source: ' + str(self.rnaseq_source))
@@ -80,16 +81,15 @@ class Controller():
 
 def phase1_execution(ctrl, script_only):
     # quality control before read alignment
-    fastqc(ctrl, 'before', script_only)
+    ctrl.joint_controller.fastqc(ctrl, 'before', script_only)
     # read alignment
-    bowtie2(ctrl, script_only)
-    hisat2(ctrl, script_only)
+    ctrl.chipseq_controller.bowtie2(ctrl, script_only)
+    ctrl.rnaseq_controller.hisat2(ctrl, script_only)
     # quality control after read alignment
-    fastqc(ctrl, 'after', script_only)
+    ctrl.joint_controller.fastqc(ctrl, 'after', script_only)
 
 
 def phase2_execution(ctrl, script_only):
-    samtools(ctrl, script_only)
     pass
 
 
