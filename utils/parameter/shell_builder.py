@@ -34,15 +34,16 @@ def general_shell_builder(slurm, execution_path, log_path, module_list, file_nam
 
 def total_log_general_shell_builder(total_log_path, slurm):
     # if exist, delete the old shell script
-    if os.path.exists(total_log_path):
-        os.remove(total_log_path)
+    script_path = total_log_path + '/total_script.sh'
+    if os.path.exists(script_path):
+        os.remove(script_path)
 
     # create execution path
     if not os.path.exists(os.path.dirname(total_log_path)):
         os.makedirs(os.path.dirname(total_log_path))
 
     # build general format of shell script for the path
-    shell_file = open(total_log_path, 'w')
+    shell_file = open(script_path, 'w')
     shell_file.write("#!/bin/bash\n")
     shell_file.write("#SBATCH --partition=" + slurm['partition'] + "\n")
     shell_file.write("#SBATCH --time=" + slurm['time'] + "\n")

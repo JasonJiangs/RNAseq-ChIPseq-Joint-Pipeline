@@ -17,6 +17,7 @@ class Controller():
         self.chipseq_source = None
         self.mapping_index_source = None
         self.annotation_source = None
+        self.mapping_index_list = parameters['config_dict']['datasource']['mapping-index']
         self.base_path = parameters['config_dict']['resultdestination']
         self.slurm_log_path = self.base_path + '/result/shell_log/'
         self.rnaseq_controller = RNASeq(parameters['config_dict']['datasource']['rna-seq'],
@@ -25,7 +26,7 @@ class Controller():
                                           parameters['config_dict']['chipseq'], self.base_path, self.logger)
         self.joint_controller = Joint(parameters['config_dict']['joint'], self.base_path, self.logger)
         self.slurm = parameters['config_dict']['slurm']
-        self.total_log = self.base_path + '/result/total_log.txt'
+        self.total_log = self.base_path + '/result'
         self.shell_script_path = self.base_path + '/result/shell_script/'
         source_file_parser(self)
         dir_builder(self.base_path)
@@ -89,7 +90,6 @@ def phase1_execution(ctrl, script_only):
     ctrl.rnaseq_controller.hisat2(ctrl, script_only)
     # quality control after read alignment
     ctrl.joint_controller.fastqc(ctrl, 'after', script_only)
-
 
 def phase2_execution(ctrl, script_only):
     pass

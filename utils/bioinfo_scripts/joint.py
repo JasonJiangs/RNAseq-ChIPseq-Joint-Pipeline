@@ -68,6 +68,8 @@ class Joint():
                                    sample_name=file.split('.')[0],
                                    sample_path=dir_path+file)
 
+    def multiqc(self, ctrl, script_only):
+        pass
 
     def samtools(self, ctrl, script_only):
         pass

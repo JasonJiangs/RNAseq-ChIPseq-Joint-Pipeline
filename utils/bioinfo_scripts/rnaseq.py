@@ -8,6 +8,7 @@ class RNASeq():
         self.htseq_path = base_path + '/result/rnaseq/htseq/'
         self.config = config
         self.tools = tools
+        self.logger = logger
         dir_builder(self.hisat2_path)
         dir_builder(self.stringtie_path)
         dir_builder(self.deseq2_path)
@@ -23,15 +24,27 @@ class RNASeq():
 
 
     def hisat2(self, ctrl, script_only):
-        paired_end = ctrl.parameter['config_dict']['datasource']['rna-seq']['paired-end']
-        script_path = self.hisat2_path + 'hisat2.sh'
+        self.logger.write_log('Start hisat2 script generation.')
+        paired_end = ctrl.parameters['config_dict']['datasource']['rna-seq']['paired-end']
+        script_path = ctrl.base_path + '/result/shell_script/hisat2.sh'
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
                               ['gcc', 'hisat2'], 'hisat2_result' )
 
         if paired_end == 'y':
-            pass
+            rnaseq_file_list = loop_concatanator('n', self.config['files'])
+            shell_file = open(script_path, 'a')
+            shell_file.write('for i in ' + rnaseq_file_list + '\n')
+            shell_file.write('do\n')
+            shell_file.write('hisat2 -t -p ' + str(self.tools['hisat2']['-p']) + ' -x ' +
+                             ctrl.mapping_index_list['hisat2'] + ' -1 ' + self.config['dir_path'] +
+                             '\"$i\"_1.fastq.gz -2 ' + self.config['dir_path'] + '\"$i\"_2.fastq.gz -S '
+                             + self.hisat2_path + '\"$i\"' + '.sam\n')
+            shell_file.write('done\n')
+            shell_file.close()
+            self.logger.write_log('Finish hisat2 script generation with paired-end mode.')
         else:
-            pass
+            # TODO: single end
+            self.logger.write_log('Finish hisat2 script generation with single-end mode.')
 
         if script_only == 'n':
             ctrl.logger.write_log('Start executing shell script: ' + script_path)

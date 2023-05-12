@@ -1,4 +1,5 @@
-# RNA-seq & ChIP-seq Joint Analysis Workflow and Pipeline
+# RNA-seq & ChIP-seq Joint Analysis Pipeline
+*Under development*
 
 ## Introduction
 The repository contains the workflow and pipelines for exploring transcriptional regulatory
@@ -26,6 +27,7 @@ cd RNA-seq-ChIP-seq-Joint-Analysis
 ### 2. Install the required packages
 There is no instruction for installing the required packages, only the versions of the packages are listed.
 #### Python packages
+We use python 3 for the pipeline.
 ```
 pipreqs . --force
 pip install -r requirements.txt
@@ -37,23 +39,27 @@ pip install -r requirements.txt
 Those tools are required in the pipeline.
 
 Phase 1
-- [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-- [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
-- [hisat2](http://daehwankimlab.github.io/hisat2/)
-- [multiqc](https://multiqc.info/)
+- [x] [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+  - [x] Use fastqc before and after alignment.
+  - [x] Add qc tolerance.
+- [x] [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
+  - [x] check paired-end or single-end
+- [x] [hisat2](http://daehwankimlab.github.io/hisat2/)
+  - [x] check paired-end or single-end
+- [ ] [multiqc](https://multiqc.info/) (Optional)
 
 Phase 2
-- [samtools](http://www.htslib.org/)
-- [picard](https://broadinstitute.github.io/picard/)
-- [deeptools](https://deeptools.readthedocs.io/en/develop/)
-- [bedtools](https://bedtools.readthedocs.io/en/latest/)
+- [ ] [samtools](http://www.htslib.org/)
+- [ ] [picard](https://broadinstitute.github.io/picard/)
+- [ ] [deeptools](https://deeptools.readthedocs.io/en/develop/)
+- [ ] [bedtools](https://bedtools.readthedocs.io/en/latest/)
 
 Phase 3
-- [salmon](https://salmon.readthedocs.io/en/latest/)
-- [star]()
-- [stringtie](https://ccb.jhu.edu/software/stringtie/)
-- [cufflinks](http://cole-trapnell-lab.github.io/cufflinks/)
-- [macs2]()
+- [ ] [salmon](https://salmon.readthedocs.io/en/latest/)
+- [ ] [star]()
+- [ ] [stringtie](https://ccb.jhu.edu/software/stringtie/)
+- [ ] [cufflinks](http://cole-trapnell-lab.github.io/cufflinks/)
+- [ ] [macs2]()
 
 
 ### 3. Configure the configuration file
@@ -61,7 +67,7 @@ The configuration file is `config.yaml`, in which you should store your datasour
 otherwise the result will be stored in the default path. The datasource path must be defined.
 ```yaml
 # Choose only to do script generation
-script-only: n
+script-only: y
 
 # it should take the directory
 # mapping-index: mapping indexes for bowtie2, bwa, hisat2, salmon, star
@@ -88,10 +94,13 @@ datasource:
     paired-end: n
     suffix: .fastq.gz  # fastq.gz supported only for now
   # e.g.: Storing bowtie2 index inside as a subdirectory in name of bowtie2_index.
-  mapping-index: /nv/vol190/zanglab/zw5j/data/index/
+  mapping-index:
+    hisat2: /nv/vol190/zanglab/zw5j/data/index/hisat2_index/hg38
+    bowtie2: /nv/vol190/zanglab/zw5j/data/index/bowtie_index/bowtie2/hg38
   annotation: /nv/vol190/zanglab/shared/StudentTestData/annotation/
 
 # Root directory for the results
+# TODO: add '/' at the end of the path
 resultdestination: /scratch/pfq7pm/test_pipeline/proj_result
 
 # slurm configuration
@@ -99,24 +108,24 @@ slurm:
   partition: standard
   time: '72:00:00'
   mem: 64G
-  cpus-per-task: 8
+  cpus-per-task: 16
   A: zanglab
 
 # qc-toleration: number of files that can fail qc before the pipeline stops
 qc-toleration:
   warn: 4
   fail: 1
-  
-rnaseq:
-  # read alignment
-  bowtie2:
-    -p: 8
-    -t: y
 
 chipseq:
   # read alignment
+  bowtie2:
+    -p: 16
+    -t: y
+
+rnaseq:
+  # read alignment
   hisat2:
-    -p: 8
+    -p: 16
 
 joint:
   # quality control
@@ -131,6 +140,7 @@ joint:
     sort:
       -@: 8
     index: y
+
 ```
 
 ### 4. Run the workflow
@@ -156,10 +166,38 @@ Sample command (full process):
 python main.py -c config.yaml -p 123 -m cr
 ```
 ### 5. Result
-You should appoint the storage path in the `config.yaml` file.
-### Result file structure:
-```bash
+You should appoint the storage path, which is `resultdestination` in the `config.yaml` file.
 
+### 6. Generated Folder Structure
+It includes result, program log file, shell scripts, and shell logs. 
+```text
+-bash-4.2$module load tree/1.8.0
+-bash-4.2$pwd
+/scratch/pfq7pm/test_pipeline
+-bash-4.2$tree
+.
+└── proj_result
+    ├── execution_log.txt
+    └── result
+        ├── chipseq
+        │   ├── bowtie2
+        │   └── macs2
+        ├── joint
+        │   └── qc
+        │       ├── after
+        │       └── before
+        ├── rnaseq
+        │   ├── deseq2
+        │   ├── hisat2
+        │   ├── htseq
+        │   └── stringtie
+        ├── shell_log
+        ├── shell_script
+        │   ├── bowtie2.sh
+        │   ├── fastqc_after.sh
+        │   ├── fastqc_before.sh
+        │   └── hisat2.sh
+        └── total_script.sh
 ```
 
 ## Clarification
@@ -172,9 +210,5 @@ Otherwise, you can just take the generated scripts as a reference and run it on 
 When you config the `config.yaml` file with `script-only: y`, you should get only script in the result folder - you 
 can basically take it as a script generator.
 
-### Script structure for script-only mode
-```text
 
-```
-
-## Reference
+## Acknowledgement

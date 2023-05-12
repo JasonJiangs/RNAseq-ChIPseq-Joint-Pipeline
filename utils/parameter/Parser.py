@@ -70,39 +70,39 @@ def source_file_parser(ctrl):
         else:
             chip_seq_source[file] = os.path.join(chipseq_dirpath, file + chipseq_suffix)
 
-    # parse mapping-index source file paths
-    for root, dirs, files in os.walk(ctrl.parameters['config_dict']['datasource']['mapping-index']):
-        for file in files:
-            # if file include 'bowtie'
-            if file.find('bowtie') != -1:
-                mapping_index_source['bowtie'] = os.path.join(root, file)
-            elif file.find('hisat2') != -1:
-                mapping_index_source['hisat2'] = os.path.join(root, file)
-            elif file.find('bwa') != -1:
-                mapping_index_source['bwa'] = os.path.join(root, file)
-            elif file.find('star') != -1:
-                mapping_index_source['star'] = os.path.join(root, file)
-            elif file.find('salmon') != -1:
-                mapping_index_source['salmon'] = os.path.join(root, file)
-            else:
-                pass
+    # # parse mapping-index source file paths
+    # for root, dirs, files in os.walk(ctrl.parameters['config_dict']['datasource']['mapping-index']):
+    #     for file in files:
+    #         # if file include 'bowtie'
+    #         if file.find('bowtie') != -1:
+    #             mapping_index_source['bowtie'] = os.path.join(root, file)
+    #         elif file.find('hisat2') != -1:
+    #             mapping_index_source['hisat2'] = os.path.join(root, file)
+    #         elif file.find('bwa') != -1:
+    #             mapping_index_source['bwa'] = os.path.join(root, file)
+    #         elif file.find('star') != -1:
+    #             mapping_index_source['star'] = os.path.join(root, file)
+    #         elif file.find('salmon') != -1:
+    #             mapping_index_source['salmon'] = os.path.join(root, file)
+    #         else:
+    #             pass
 
     # parse annotation source file paths
-    for root, dirs, files in os.walk(ctrl.parameters['config_dict']['datasource']['annotation']):
-        for file in files:
-            # if file include 'gtf'
-            if file.find('.gtf') != -1:
-                annotation_source['gtf'] = os.path.join(root, file)
-            elif file.find('.gff') != -1:
-                annotation_source['gff'] = os.path.join(root, file)
-            elif file.find('.bed') != -1:
-                annotation_source['bed'] = os.path.join(root, file)
-            elif file.find('.ref') != -1:
-                annotation_source['ref'] = os.path.join(root, file)
-            else:
-                pass
+    # for root, dirs, files in os.walk(ctrl.parameters['config_dict']['datasource']['annotation']):
+    #     for file in files:
+    #         # if file include 'gtf'
+    #         if file.find('.gtf') != -1:
+    #             annotation_source['gtf'] = os.path.join(root, file)
+    #         elif file.find('.gff') != -1:
+    #             annotation_source['gff'] = os.path.join(root, file)
+    #         elif file.find('.bed') != -1:
+    #             annotation_source['bed'] = os.path.join(root, file)
+    #         elif file.find('.ref') != -1:
+    #             annotation_source['ref'] = os.path.join(root, file)
+    #         else:
+    #             pass
 
     ctrl.rnaseq_source = rna_seq_source
     ctrl.chipseq_source = chip_seq_source
-    ctrl.mapping_index_source = mapping_index_source
-    ctrl.annotation_source = annotation_source
+    # ctrl.mapping_index_source = mapping_index_source
+    # ctrl.annotation_source = annotation_source
