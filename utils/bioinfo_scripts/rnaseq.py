@@ -30,6 +30,9 @@ class RNASeq():
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
                               ['gcc', 'hisat2'], 'hisat2_result' )
 
+        module_loader(ctrl.total_script_file, ['hisat2'])
+        total_shell_file = open(ctrl.total_script_file, 'a')
+
         if paired_end == 'y':
             rnaseq_file_list = loop_concatanator('n', self.config['files'])
             shell_file = open(script_path, 'a')
@@ -41,6 +44,16 @@ class RNASeq():
                              + self.hisat2_path + '\"$i\"' + '.sam\n')
             shell_file.write('done\n')
             shell_file.close()
+
+            total_shell_file.write('for i in ' + rnaseq_file_list + '\n')
+            total_shell_file.write('do\n')
+            total_shell_file.write('hisat2 -t -p ' + str(self.tools['hisat2']['-p']) + ' -x ' +
+                             ctrl.mapping_index_list['hisat2'] + ' -1 ' + self.config['dir_path'] +
+                             '\"$i\"_1.fastq.gz -2 ' + self.config['dir_path'] + '\"$i\"_2.fastq.gz -S '
+                             + self.hisat2_path + '\"$i\"' + '.sam\n')
+            total_shell_file.write('done\n')
+            total_shell_file.write('\n')
+            total_shell_file.close()
             self.logger.write_log('Finish hisat2 script generation with paired-end mode.')
         else:
             # TODO: single end

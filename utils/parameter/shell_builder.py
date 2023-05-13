@@ -89,3 +89,11 @@ def loop_concatanator(pe, od_list):
     else:
         file_str = file_str.join(od_list)
     return file_str
+
+
+def module_loader(total_log_file_path, module_list):
+    shell_file = open(total_log_file_path, 'a')
+    for module in module_list:
+        shell_file.write("module load " + module + "\n")
+    shell_file.write("\n")
+    shell_file.close()

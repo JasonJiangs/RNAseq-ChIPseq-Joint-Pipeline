@@ -26,14 +26,15 @@ class Controller():
                                           parameters['config_dict']['chipseq'], self.base_path, self.logger)
         self.joint_controller = Joint(parameters['config_dict']['joint'], self.base_path, self.logger)
         self.slurm = parameters['config_dict']['slurm']
-        self.total_log = self.base_path + '/result'
+        self.total_script = self.base_path + '/result'
+        self.total_script_file = self.base_path + '/result/total_script.sh'
         self.shell_script_path = self.base_path + '/result/shell_script/'
         source_file_parser(self)
         dir_builder(self.base_path)
         dir_builder(self.slurm_log_path)
-        dir_builder(self.total_log)
+        dir_builder(self.total_script)
         dir_builder(self.shell_script_path)
-        total_log_general_shell_builder(self.total_log, self.slurm)
+        total_log_general_shell_builder(self.total_script, self.slurm)
         self.logger.parameter_log('model: ' + self.model)
         self.logger.parameter_log('phase: ' + self.phase)
         self.logger.parameter_log('rnaseq_source: ' + str(self.rnaseq_source))

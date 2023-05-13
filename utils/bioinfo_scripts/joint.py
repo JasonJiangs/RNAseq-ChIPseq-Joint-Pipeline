@@ -31,6 +31,9 @@ class Joint():
 
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'fastqc'], file_name)
 
+        module_loader(ctrl.total_script_file, ['gcc', 'fastqc'])
+        total_shell_file = open(ctrl.total_script_file, 'a')
+
         chipseq_file_str = loop_concatanator(chipseq_ctrl.config['paired-end'], chipseq_ctrl.config['files'])
         shell_file = open(script_path, 'a')
         shell_file.write('for i in ' + chipseq_file_str + '\n')
@@ -38,6 +41,13 @@ class Joint():
         shell_file.write('fastqc -f ' + file_format + ' -o ' + self.qc_path + condition + '/ ' +
                          chipseq_ctrl.config['dir_path'] + '\"$i\"' + chipseq_ctrl.config['suffix'] + '\n')
         shell_file.write('done\n')
+
+        total_shell_file.write('for i in ' + chipseq_file_str + '\n')
+        total_shell_file.write('do\n')
+        total_shell_file.write('fastqc -f ' + file_format + ' -o ' + self.qc_path + condition + '/ ' +
+                         chipseq_ctrl.config['dir_path'] + '\"$i\"' + chipseq_ctrl.config['suffix'] + '\n')
+        total_shell_file.write('done\n')
+        total_shell_file.write('\n')
         dir_builder(self.qc_path + condition + '/')
 
         rnaseq_file_str = loop_concatanator(rnaseq_ctrl.config['paired-end'], rnaseq_ctrl.config['files'])
@@ -46,9 +56,17 @@ class Joint():
         shell_file.write('fastqc -f ' + file_format + ' -o ' + self.qc_path + condition + '/ ' +
                          rnaseq_ctrl.config['dir_path'] + '\"$i\"' + rnaseq_ctrl.config['suffix'] + '\n')
         shell_file.write('done\n')
+
+        total_shell_file.write('for i in ' + rnaseq_file_str + '\n')
+        total_shell_file.write('do\n')
+        total_shell_file.write('fastqc -f ' + file_format + ' -o ' + self.qc_path + condition + '/ ' +
+                         rnaseq_ctrl.config['dir_path'] + '\"$i\"' + rnaseq_ctrl.config['suffix'] + '\n')
+        total_shell_file.write('done\n')
+        total_shell_file.write('\n')
         dir_builder(self.qc_path + condition + '/')
 
         shell_file.close()
+        total_shell_file.close()
 
         ctrl.logger.write_log('fastqc script build finished: ' + script_path)
 
