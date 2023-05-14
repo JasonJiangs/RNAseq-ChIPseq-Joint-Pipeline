@@ -200,6 +200,7 @@ It includes result, program log file, shell scripts, and shell logs.
         │   └── hisat2.sh
         └── total_script.sh
 ```
+Some sample result can be referred to `sample_result` folder.
 
 ## Clarification
 ### Script-only mode

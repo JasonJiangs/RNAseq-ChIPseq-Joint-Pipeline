@@ -5,11 +5,16 @@ from utils.parameter.html_parser import *
 class Joint():
     def __init__(self, tools, bash_path, logger):
         self.qc_path = bash_path + '/result/joint/qc/'
+        self.samtools_path = bash_path + '/result/joint/samtools/'
         self.tools = tools
+        self.logger = logger
         dir_builder(self.qc_path)
+        dir_builder(self.samtools_path)
         logger.parameter_log('------------------ Joint Load Start ------------------')
         logger.parameter_log('tools: ' + str(tools))
         logger.parameter_log('bash_path: ' + bash_path)
+        logger.parameter_log('qc_path: ' + str(self.qc_path))
+        logger.parameter_log('samtools_path: ' + str(self.samtools_path))
         logger.parameter_log('------------------ Joint Load Finish ------------------')
 
 
@@ -90,4 +95,26 @@ class Joint():
         pass
 
     def samtools(self, ctrl, script_only):
-        pass
+        self.logger.write_log('Start building samtools script')
+        chipseq_ctrl = ctrl.chipseq_controller
+        rnaseq_ctrl = ctrl.rnaseq_controller
+
+        script_path = ctrl.base_path + '/result/shell_script/samtools.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'samtools'], 'samtools_result')
+
+        module_loader(ctrl.total_script_file, ['gcc', 'samtools'])
+        total_shell_file = open(ctrl.total_script_file, 'a')
+
+
+
+        ctrl.logger.write_log('samtools script build finished: ' + script_path)
+
+
+
+        if script_only == 'n':
+            ctrl.logger.write_log('Start executing shell script: ' + script_path)
+            linux_command = 'sbatch ' + script_path
+            shell_runner(linux_command, ctrl)
+            self.logger.write_log('samtools execution finished' + script_path)
+        else:
+            self.logger.write_log('samtools script only mode')

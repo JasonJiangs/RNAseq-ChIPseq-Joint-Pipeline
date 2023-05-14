@@ -1,0 +1,42 @@
+Execution Log initialized ......
+*2023-05-13 02:12:40* Start loading parameters.
+==================== Controller Load Start ====================
+Parameters:
+------------------ RNASeq Load Start ------------------
+config: {'dir_path': '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/', 'files': ['LNCaP_DHT_RNA_rep1', 'LNCaP_DHT_RNA_rep2', 'LNCaP_Veh_RNA_rep1', 'LNCaP_Veh_RNA_rep2'], 'paired-end': 'y', 'suffix': '.fastq.gz'}
+tools: {'hisat2': {'-p': 16}}
+hisat2_path: /scratch/pfq7pm/test_pipeline/proj_result/result/rnaseq/hisat2/
+stringtie_path: /scratch/pfq7pm/test_pipeline/proj_result/result/rnaseq/stringtie/
+deseq2_path: /scratch/pfq7pm/test_pipeline/proj_result/result/rnaseq/deseq2/
+htseq_path: /scratch/pfq7pm/test_pipeline/proj_result/result/rnaseq/htseq/
+------------------ RNASeq Load Finish ------------------
+------------------ Chipseq Load Start ------------------
+config: {'dir_path': '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/', 'files': ['LNCaP_DHT_AR_1', 'LNCaP_DHT_AR_2', 'LNCaP_Veh_AR_1', 'LNCaP_Veh_AR_2'], 'paired-end': 'n', 'suffix': '.fastq.gz'}
+tools: {'bowtie2': {'-p': 16, '-t': 'y'}}
+bowtie2_path: /scratch/pfq7pm/test_pipeline/proj_result/result/chipseq/bowtie2/
+macs2_path: /scratch/pfq7pm/test_pipeline/proj_result/result/chipseq/macs2/
+------------------ Chipseq Load Finish ------------------
+------------------ Joint Load Start ------------------
+tools: {'fastqc': {'-f': 'fastq'}, 'samtools': {'view': {'-b': 'y', '-S': 'y', '-@': 8}, 'sort': {'-@': 8}, 'index': 'y'}}
+bash_path: /scratch/pfq7pm/test_pipeline/proj_result
+------------------ Joint Load Finish ------------------
+model: cr
+phase: 1
+rnaseq_source: {'LNCaP_DHT_RNA_rep1': ['/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_DHT_RNA_rep1_1.fastq.gz', '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_DHT_RNA_rep1_2.fastq.gz'], 'LNCaP_DHT_RNA_rep2': ['/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_DHT_RNA_rep2_1.fastq.gz', '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_DHT_RNA_rep2_2.fastq.gz'], 'LNCaP_Veh_RNA_rep1': ['/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_Veh_RNA_rep1_1.fastq.gz', '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_Veh_RNA_rep1_2.fastq.gz'], 'LNCaP_Veh_RNA_rep2': ['/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_Veh_RNA_rep2_1.fastq.gz', '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_Veh_RNA_rep2_2.fastq.gz']}
+chipseq_source: {'LNCaP_DHT_AR_1': '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_DHT_AR_1.fastq.gz', 'LNCaP_DHT_AR_2': '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_DHT_AR_2.fastq.gz', 'LNCaP_Veh_AR_1': '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_Veh_AR_1.fastq.gz', 'LNCaP_Veh_AR_2': '/nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/LNCaP_Veh_AR_2.fastq.gz'}
+mapping_index_source: None
+annotation_source: None
+slurm: {'partition': 'standard', 'time': '72:00:00', 'mem': '64G', 'cpus-per-task': 16, 'A': 'zanglab'}
+base_path: /scratch/pfq7pm/test_pipeline/proj_result
+==================== Controller Load Finish ====================
+*2023-05-13 02:12:40* Finish loading parameters, start to execute.
+*2023-05-13 02:12:40* Start to run phase 1.
+*2023-05-13 02:12:40* fastqc script build finished: /scratch/pfq7pm/test_pipeline/proj_result/result/shell_script/fastqc_before.sh
+*2023-05-13 02:12:40* Start bowtie2 script generation.
+*2023-05-13 02:12:40* Finish bowtie2 script generation with single-end mode.
+*2023-05-13 02:12:40* Start hisat2 script generation.
+*2023-05-13 02:12:40* Finish hisat2 script generation with paired-end mode.
+*2023-05-13 02:12:40* Only script is generated: /scratch/pfq7pm/test_pipeline/proj_result/result/shell_script/hisat2.sh
+*2023-05-13 02:12:40* fastqc script build finished: /scratch/pfq7pm/test_pipeline/proj_result/result/shell_script/fastqc_after.sh
+*2023-05-13 02:12:40* End to run phase 1.
+*2023-05-13 02:12:40* Finish executing.
