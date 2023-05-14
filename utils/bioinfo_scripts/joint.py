@@ -17,7 +17,6 @@ class Joint():
         logger.parameter_log('samtools_path: ' + str(self.samtools_path))
         logger.parameter_log('------------------ Joint Load Finish ------------------')
 
-
     def fastqc(self, ctrl, condition, script_only):
         chipseq_ctrl = ctrl.chipseq_controller
         rnaseq_ctrl = ctrl.rnaseq_controller
@@ -50,7 +49,7 @@ class Joint():
         total_shell_file.write('for i in ' + chipseq_file_str + '\n')
         total_shell_file.write('do\n')
         total_shell_file.write('fastqc -f ' + file_format + ' -o ' + self.qc_path + condition + '/ ' +
-                         chipseq_ctrl.config['dir_path'] + '\"$i\"' + chipseq_ctrl.config['suffix'] + '\n')
+                               chipseq_ctrl.config['dir_path'] + '\"$i\"' + chipseq_ctrl.config['suffix'] + '\n')
         total_shell_file.write('done\n')
         total_shell_file.write('\n')
         dir_builder(self.qc_path + condition + '/')
@@ -65,7 +64,7 @@ class Joint():
         total_shell_file.write('for i in ' + rnaseq_file_str + '\n')
         total_shell_file.write('do\n')
         total_shell_file.write('fastqc -f ' + file_format + ' -o ' + self.qc_path + condition + '/ ' +
-                         rnaseq_ctrl.config['dir_path'] + '\"$i\"' + rnaseq_ctrl.config['suffix'] + '\n')
+                               rnaseq_ctrl.config['dir_path'] + '\"$i\"' + rnaseq_ctrl.config['suffix'] + '\n')
         total_shell_file.write('done\n')
         total_shell_file.write('\n')
         dir_builder(self.qc_path + condition + '/')
@@ -89,7 +88,7 @@ class Joint():
                     summarize_html(ctrl=ctrl,
                                    logger=ctrl.logger,
                                    sample_name=file.split('.')[0],
-                                   sample_path=dir_path+file)
+                                   sample_path=dir_path + file)
 
     def multiqc(self, ctrl, script_only):
         pass
@@ -105,11 +104,7 @@ class Joint():
         module_loader(ctrl.total_script_file, ['gcc', 'samtools'])
         total_shell_file = open(ctrl.total_script_file, 'a')
 
-
-
         ctrl.logger.write_log('samtools script build finished: ' + script_path)
-
-
 
         if script_only == 'n':
             ctrl.logger.write_log('Start executing shell script: ' + script_path)

@@ -1,5 +1,6 @@
 from utils.parameter.shell_builder import *
 
+
 class Chipseq():
     def __init__(self, config, tools, base_path, logger):
         self.bowtie2_path = base_path + '/result/chipseq/bowtie2/'
@@ -43,9 +44,9 @@ class Chipseq():
             total_shell_file.write('for i in ' + chipseq_list + '\n')
             total_shell_file.write('do\n')
             total_shell_file.write('bowtie2 -p ' + str(self.tools['bowtie2']['-p']) +
-                             ' -x ' + ctrl.parameters['config_dict']['datasource']['mapping-index']['bowtie2'] +
-                             ' -U ' + self.config['dir_path'] + "\"$i\".fastq.gz" +
-                             ' -S ' + self.bowtie2_path + '\"$i\".sam\n')
+                                   ' -x ' + ctrl.parameters['config_dict']['datasource']['mapping-index']['bowtie2'] +
+                                   ' -U ' + self.config['dir_path'] + "\"$i\".fastq.gz" +
+                                   ' -S ' + self.bowtie2_path + '\"$i\".sam\n')
             total_shell_file.write('done\n')
             total_shell_file.write('\n')
             total_shell_file.close()
@@ -57,16 +58,12 @@ class Chipseq():
             shell_runner(linux_command, ctrl)
             ctrl.logger.write_log('Finish executing shell script: ' + script_path)
 
-
     def macs2(self, ctrl, script_only):
         script_path = self.macs2_path + 'macs2.sh'
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'macs2'], 'macs2_result')
-
 
         if script_only == 'n':
             ctrl.logger.write_log('Start executing shell script: ' + script_path)
             linux_command = 'sbatch ' + script_path
             shell_runner(linux_command, ctrl)
             ctrl.logger.write_log('Finish executing shell script: ' + script_path)
-
-
