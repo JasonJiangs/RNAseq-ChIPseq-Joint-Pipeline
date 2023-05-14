@@ -97,7 +97,8 @@ datasource:
   mapping-index:
     hisat2: /nv/vol190/zanglab/zw5j/data/index/hisat2_index/hg38
     bowtie2: /nv/vol190/zanglab/zw5j/data/index/bowtie_index/bowtie2/hg38
-  annotation: /nv/vol190/zanglab/shared/StudentTestData/annotation/
+  annotation: 
+    base: /nv/vol190/zanglab/shared/StudentTestData/annotation/
 
 # Root directory for the results
 # TODO: add '/' at the end of the path
@@ -199,6 +200,7 @@ It includes result, program log file, shell scripts, and shell logs.
         │   └── hisat2.sh
         └── total_script.sh
 ```
+Some sample result can be referred to `sample_result` folder.
 
 ## Clarification
 ### Script-only mode

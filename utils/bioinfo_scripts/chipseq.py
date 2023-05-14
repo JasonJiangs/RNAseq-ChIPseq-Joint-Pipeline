@@ -22,6 +22,9 @@ class Chipseq():
         script_path = ctrl.base_path + '/result/shell_script/bowtie2.sh'
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'bowtie2'], 'bowtie2_result')
 
+        module_loader(ctrl.total_script_file, ['bowtie2'])
+        total_shell_file = open(ctrl.total_script_file, 'a')
+
         if paired_end == 'y':
             # TODO: bowtie2 paired-end
             self.logger.write_log('bowtie2 paired-end is not implemented yet.')
@@ -36,6 +39,16 @@ class Chipseq():
                              ' -S ' + self.bowtie2_path + '\"$i\".sam\n')
             shell_file.write('done\n')
             shell_file.close()
+
+            total_shell_file.write('for i in ' + chipseq_list + '\n')
+            total_shell_file.write('do\n')
+            total_shell_file.write('bowtie2 -p ' + str(self.tools['bowtie2']['-p']) +
+                             ' -x ' + ctrl.parameters['config_dict']['datasource']['mapping-index']['bowtie2'] +
+                             ' -U ' + self.config['dir_path'] + "\"$i\".fastq.gz" +
+                             ' -S ' + self.bowtie2_path + '\"$i\".sam\n')
+            total_shell_file.write('done\n')
+            total_shell_file.write('\n')
+            total_shell_file.close()
             self.logger.write_log('Finish bowtie2 script generation with single-end mode.')
 
         if script_only == 'n':
