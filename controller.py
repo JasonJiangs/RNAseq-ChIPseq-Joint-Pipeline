@@ -92,11 +92,32 @@ def phase1_execution(ctrl, script_only):
     # quality control after read alignment
     ctrl.joint_controller.fastqc(ctrl, 'after', script_only)
 
+
 def phase2_execution(ctrl, script_only):
-    pass
+    # pre-processing sam file, sort and generate bam file with samtools
+    ctrl.joint_controller.samtools(ctrl, script_only)
+    # RNA-seq: calculate RPKM for each gene and generate expression matrix
+    ctrl.rnaseq_controller.stringtie(ctrl, script_only)
+    ctrl.rnaseq_controller.prepDE(ctrl, script_only)
+    # ChIP-seq: peak calling
+    ctrl.chipseq_controller.macs2(ctrl, script_only)
+
+    # Quality check --------------------
+    # Mappability for both RNA-seq and ChIP-seq
+
+    # Replicate correlation for both RNA-seq and ChIP-seq
+
+    # Duplicate rate in ChIP-seq
+
+    # Other QC metrics
 
 
+# Joint analysis
 def phase3_execution(ctrl, script_only):
+    # Summarize reads count (or RPKM) for each gene (htseq)
+
+    # define differential expression genes based on the reads count (deseq2)
+
     pass
 
 

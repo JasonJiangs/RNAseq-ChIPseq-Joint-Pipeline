@@ -1,5 +1,6 @@
 from utils.parameter.shell_builder import *
 
+
 class RNASeq():
     def __init__(self, config, tools, base_path, logger):
         self.hisat2_path = base_path + '/result/rnaseq/hisat2/'
@@ -25,13 +26,12 @@ class RNASeq():
         logger.parameter_log('prepDE_path: ' + str(self.prepDE))
         logger.parameter_log('------------------ RNASeq Load Finish ------------------')
 
-
     def hisat2(self, ctrl, script_only):
         self.logger.write_log('Start hisat2 script generation.')
         paired_end = ctrl.parameters['config_dict']['datasource']['rna-seq']['paired-end']
         script_path = ctrl.base_path + '/result/shell_script/hisat2.sh'
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
-                              ['gcc', 'hisat2'], 'hisat2_result' )
+                              ['gcc', 'hisat2'], 'hisat2_result')
 
         module_loader(ctrl.total_script_file, ['hisat2'])
         total_shell_file = open(ctrl.total_script_file, 'a')
@@ -51,9 +51,9 @@ class RNASeq():
             total_shell_file.write('for i in ' + rnaseq_file_list + '\n')
             total_shell_file.write('do\n')
             total_shell_file.write('hisat2 -t -p ' + str(self.tools['hisat2']['-p']) + ' -x ' +
-                             ctrl.mapping_index_list['hisat2'] + ' -1 ' + self.config['dir_path'] +
-                             '\"$i\"_1.fastq.gz -2 ' + self.config['dir_path'] + '\"$i\"_2.fastq.gz -S '
-                             + self.hisat2_path + '\"$i\"' + '.sam\n')
+                                   ctrl.mapping_index_list['hisat2'] + ' -1 ' + self.config['dir_path'] +
+                                   '\"$i\"_1.fastq.gz -2 ' + self.config['dir_path'] + '\"$i\"_2.fastq.gz -S '
+                                   + self.hisat2_path + '\"$i\"' + '.sam\n')
             total_shell_file.write('done\n')
             total_shell_file.write('\n')
             total_shell_file.close()
@@ -70,22 +70,21 @@ class RNASeq():
         else:
             ctrl.logger.write_log('Only script is generated: ' + script_path)
 
-
     def stringtie(self, ctrl, script_only):
         script_path = self.stringtie_path + 'stringtie.sh'
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
-                              ['gcc', 'stringtie'], 'stringtie_result' )
+                              ['gcc', 'stringtie'], 'stringtie_result')
 
         module_loader(ctrl.total_script_file, ['stringtie'])
         total_shell_file = open(ctrl.total_script_file, 'a')
-
 
         if script_only == 'n':
             ctrl.logger.write_log('Start executing shell script: ' + script_path)
             linux_command = 'sbatch ' + script_path
             shell_runner(linux_command, ctrl)
             ctrl.logger.write_log('Finish executing shell script: ' + script_path)
-
+        else:
+            ctrl.logger.write_log('Only script is generated: ' + script_path)
 
     def prepDE(self, ctrl, script_only):
         prepDE_path = os.getcwd() + '/tools/prepDE.py'
@@ -114,10 +113,16 @@ class RNASeq():
         total_shell_file.write('python ' + prepDE_path + ' -i ' + prepDE_list_path)
         total_shell_file.close()
 
+        if script_only == 'n':
+            ctrl.logger.write_log('Start executing shell script: ' + ctrl.total_script_file)
+            linux_command = 'sbatch ' + ctrl.total_script_file
+            shell_runner(linux_command, ctrl)
+            ctrl.logger.write_log('Finish executing shell script: ' + ctrl.total_script_file)
+        else:
+            ctrl.logger.write_log('Only script is generated: ' + ctrl.total_script_file)
 
     def deseq2(self, ctrl, script_only):
         pass
-
 
     def htseq(self, ctrl, script_only):
         pass
