@@ -36,7 +36,7 @@ if (!file.exists("result")) {
   dir.create("result")
 }
 
-data <- read.csv("data/gene_count_matrix.csv", row.names = 1)
+data <- read.csv("data/transcript_count_matrix.csv", row.names = 1)
 
 # Normalization
 data_norm <- cpm(data)
@@ -47,9 +47,7 @@ correlation_matrix <- cor(data_norm, method = "spearman")
 write.csv(correlation_matrix, "result/correlation_matrix.csv")
 
 # Visualization
-heatmap(correlation_matrix)
-# save
-png("result/heatmap.png", width = 800, height = 800)
+heatmap:heatmap(correlation_matrix)
 
 # advanced visualization
 pheatmap::pheatmap(correlation_matrix)
@@ -83,7 +81,7 @@ if (!(column1 %in% names(data_norm02)) | !(column2 %in% names(data_norm02))) {
          title=paste("Scatter plot of", column1, "vs", column2)) +
     geom_smooth(method=lm , color="red", se=FALSE)
   
-  # print(plot)
+    print(plot)
   # save
     ggsave("result/scatter_plot01.png", plot, width = 8, height = 8)
 }
@@ -104,7 +102,7 @@ if (!(column1 %in% names(data_norm02)) | !(column2 %in% names(data_norm02))) {
          title=paste("Scatter plot of", column1, "vs", column2)) +
     geom_smooth(method=lm , color="red", se=FALSE)
   
-  # print(plot)
+    print(plot)
   # save
     ggsave("result/scatter_plot02.png", plot, width = 8, height = 8)
 }

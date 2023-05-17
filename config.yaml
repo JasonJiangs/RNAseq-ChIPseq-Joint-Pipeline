@@ -53,6 +53,15 @@ chipseq:
   bowtie2:
     -p: 16
     -t: y
+  # peak calling
+  macs2:
+    -t: experiment
+    -c: control
+    -f: BAM
+    -g: hs
+    -n: experiment
+    -q: 0.01
+
 
 rnaseq:
   # read alignment
