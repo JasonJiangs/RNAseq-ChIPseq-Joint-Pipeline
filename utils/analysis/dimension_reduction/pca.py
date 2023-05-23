@@ -67,10 +67,14 @@ class DR_PCA():
 
 
 
-
 if __name__ == '__main__':
     # read data
     data = pd.read_csv('../data/rnaseq/gene_fpkm_matrix.csv', index_col=0)
+    # drop the last two columns
+    # data = data.iloc[:, :-2]
+    # check correlation between first two columns
+    print(data.iloc[:, 0].corr(data.iloc[:, 1]))
+    print(data.iloc[:, 2].corr(data.iloc[:, 3]))
     model = DR_PCA(data)
     model.scale()
     model.fit()
