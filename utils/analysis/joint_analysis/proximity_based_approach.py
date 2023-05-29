@@ -54,10 +54,12 @@ for idx, row in deseq_results.iterrows():
                 enhancer_overlaps_up.loc[len(enhancer_overlaps_up)] = [row['gene_id'], row['chrom'], row['start'], row['end'],
                                                                        enhancer_row['chrom'], enhancer_row['start'], enhancer_row['end'],
                                                                        enhancer_row['start'] - row['start'], enhancer_row['end'] - row['end'], 'Yes']
+                continue
             else:
                 enhancer_overlaps_down.loc[len(enhancer_overlaps_down)] = [row['gene_id'], row['chrom'], row['start'], row['end'],
                                                                            enhancer_row['chrom'], enhancer_row['start'], enhancer_row['end'],
                                                                            enhancer_row['start'] - row['start'], enhancer_row['end'] - row['end'], 'Yes']
+                continue
 
         if is_within_distance(gene_loc, enhancer_loc, 10000):  # adjust distance as needed
             enhancer_associated_genes[i].append(row['gene_id'])
@@ -80,10 +82,12 @@ for idx, row in deseq_results.iterrows():
                 promoter_overlaps_up.loc[len(promoter_overlaps_up)] = [row['gene_id'], row['chrom'], row['start'], row['end'],
                                                                        promoter_row['chrom'], promoter_row['start'], promoter_row['end'],
                                                                        promoter_row['start'] - row['start'], promoter_row['end'] - row['end'], 'Yes']
+                continue
             else:
                 promoter_overlaps_down.loc[len(promoter_overlaps_down)] = [row['gene_id'], row['chrom'], row['start'], row['end'],
                                                                            promoter_row['chrom'], promoter_row['start'], promoter_row['end'],
                                                                            promoter_row['start'] - row['start'], promoter_row['end'] - row['end'], 'Yes']
+                continue
 
         if is_within_distance(gene_loc, promoter_loc, 10000):  # adjust distance as needed
             promoter_associated_genes[i].append(row['gene_id'])

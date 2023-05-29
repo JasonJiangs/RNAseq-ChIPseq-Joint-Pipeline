@@ -43,7 +43,7 @@ def subtract(a_entries, b_entries):
     return result
 
 # Load the BED files
-summits = read_bed_file('test_data/LNCaP_DHT_AR_1_PK_summits.bed')
+summits = read_bed_file('test_data/LNCaP_DHT_AR_1_PK_peaks.narrowPeak')
 promoter_2kb = read_bed_file('test_data/promoters_regions_UD2kb_Mod.bed')
 promoter_10kb = read_bed_file('test_data/promoters_regions_UD10kb_Mod.bed')
 
@@ -55,6 +55,6 @@ AR_promoter_enhancer_binding_10kb = intersect(summits, promoter_10kb)
 AR_enhancer_between_2kb_10kb = subtract(AR_promoter_enhancer_binding_10kb, AR_promoter_binding_2kb)
 
 # Save the results to BED files
-write_bed_file('test_result/AR_promoter_binding_UD2kb.bed', AR_promoter_binding_2kb)
-write_bed_file('test_result/AR_promoter_enhancer_binding_UD10kb.bed', AR_promoter_enhancer_binding_10kb)
-write_bed_file('test_result/AR_enhancer_between_2kb_10kb.bed', AR_enhancer_between_2kb_10kb)
+write_bed_file('test_result/AR_promoter_binding_UD2kb_np.bed', AR_promoter_binding_2kb)
+write_bed_file('test_result/AR_promoter_enhancer_binding_UD10kb_np.bed', AR_promoter_enhancer_binding_10kb)
+write_bed_file('test_result/AR_enhancer_between_2kb_10kb.bed_np', AR_enhancer_between_2kb_10kb)
