@@ -26,10 +26,10 @@ print(res)
 write.csv(as.data.frame(res), file = "result/deseq2/deseq2_results.csv")
 
 # List significantly differentially expressed genes with |log2 fold change| > 1
-resSig <- res[which(res$padj < 0.05 & abs(res$log2FoldChange) > 1),]
+resSig <- res[which(res$padj < 0.05 & abs(res$log2FoldChange) > 0.01),]
 print(resSig)
 #save
-write.csv(as.data.frame(resSig), file = "result/deseq2/deseq2_results_sig.csv")
+write.csv(as.data.frame(resSig), file = "result/deseq2/deseq2_results_sig_001.csv")
 
 # Load necessary library
 library(ggplot2)
