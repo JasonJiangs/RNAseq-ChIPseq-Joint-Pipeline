@@ -1,4 +1,4 @@
-from utils.parameter.Parser import source_file_parser
+from utils.parameter.parser import source_file_parser
 from utils.parameter.shell_builder import dir_builder, total_log_general_shell_builder
 from utils.bioinfo_scripts.joint import Joint
 from utils.bioinfo_scripts.chipseq import Chipseq
@@ -84,6 +84,8 @@ class Controller():
 
 
 def phase1_execution(ctrl, script_only):
+    # fastp
+    ctrl.joint_controller.fastp(ctrl, script_only)
     # quality control before read alignment
     ctrl.joint_controller.fastqc(ctrl, 'before', script_only)
     # read alignment
@@ -97,10 +99,10 @@ def phase2_execution(ctrl, script_only):
     # pre-processing sam file, sort and generate bam file with samtools
     ctrl.joint_controller.samtools(ctrl, script_only)
     # RNA-seq: calculate RPKM for each gene and generate expression matrix
-    ctrl.rnaseq_controller.stringtie(ctrl, script_only)
-    ctrl.rnaseq_controller.prepDE(ctrl, script_only)
+    # ctrl.rnaseq_controller.stringtie(ctrl, script_only)
+    # ctrl.rnaseq_controller.prepDE(ctrl, script_only)
     # ChIP-seq: peak calling
-    ctrl.chipseq_controller.macs2(ctrl, script_only)
+    # ctrl.chipseq_controller.macs2(ctrl, script_only)
 
     # Quality check --------------------
     # Mappability for both RNA-seq and ChIP-seq

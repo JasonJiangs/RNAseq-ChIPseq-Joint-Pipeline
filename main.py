@@ -1,5 +1,5 @@
 import argparse
-from utils.parameter.Parser import load_parameters
+from utils.parameter.parser import load_parameters
 from controller import Controller
 from utils.logger.logger import Logger
 

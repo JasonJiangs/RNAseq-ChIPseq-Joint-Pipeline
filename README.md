@@ -30,6 +30,7 @@ There is no instruction for installing the required packages, only the versions 
 We use python 3 for the pipeline.
 ```
 pipreqs . --force
+module load anaconda
 pip install -r requirements.txt
 ``` 
 #### R packages
@@ -39,6 +40,7 @@ pip install -r requirements.txt
 Those tools are required in the pipeline.
 
 Phase 1
+- [x] [fastp]()
 - [x] [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
   - [x] Use fastqc before and after alignment.
   - [x] Add qc tolerance.
@@ -49,17 +51,16 @@ Phase 1
 - [ ] [multiqc](https://multiqc.info/) (Optional)
 
 Phase 2
-- [ ] [samtools](http://www.htslib.org/)
-- [ ] [picard](https://broadinstitute.github.io/picard/)
+- [x] [samtools](http://www.htslib.org/)
+- [ ] [MACS2]()
+- [ ] [stringtie]()
+- [ ] [prepDE.py](https://ccb.jhu.edu/software/stringtie/dl/prepDE.py)
+- [ ] [getTPM.py](https://ccb.jhu.edu/software/stringtie/dl/getTPM.py)
+- [ ] [getPFKM.py](https://ccb.jhu.edu/software/stringtie/dl/getFPKM.py)  
 - [ ] [deeptools](https://deeptools.readthedocs.io/en/develop/)
 - [ ] [bedtools](https://bedtools.readthedocs.io/en/latest/)
 
 Phase 3
-- [ ] [salmon](https://salmon.readthedocs.io/en/latest/)
-- [ ] [star]()
-- [ ] [stringtie](https://ccb.jhu.edu/software/stringtie/)
-- [ ] [cufflinks](http://cole-trapnell-lab.github.io/cufflinks/)
-- [ ] [macs2]()
 
 
 ### 3. Configure the configuration file
