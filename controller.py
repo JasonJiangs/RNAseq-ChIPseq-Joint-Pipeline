@@ -16,7 +16,7 @@ class Controller():
         self.rnaseq_source = None
         self.chipseq_source = None
         self.mapping_index_source = None
-        self.annotation_source = None
+        self.annotation_source = parameters['config_dict']['datasource']['annotation']
         self.mapping_index_list = parameters['config_dict']['datasource']['mapping-index']
         self.base_path = parameters['config_dict']['resultdestination']
         self.slurm_log_path = self.base_path + '/result/shell_log/'
@@ -99,10 +99,17 @@ def phase2_execution(ctrl, script_only):
     # pre-processing sam file, sort and generate bam file with samtools
     ctrl.joint_controller.samtools(ctrl, script_only)
     # RNA-seq: calculate RPKM for each gene and generate expression matrix
-    # ctrl.rnaseq_controller.stringtie(ctrl, script_only)
-    # ctrl.rnaseq_controller.prepDE(ctrl, script_only)
+    ctrl.rnaseq_controller.stringtie(ctrl, script_only)
+    # write list for prepDE.py, getTPM.py and getRPKM.py
+    ctrl.rnaseq_controller.list_writer(ctrl)
+    if ctrl.chipseq_controller.tools['prepDE'] == 'y':
+        ctrl.rnaseq_controller.prepDEpy(ctrl, script_only)
+    if ctrl.chipseq_controller.tools['getTPM'] == 'y':
+        ctrl.rnaseq_controller.getTPMpy(ctrl, script_only)
+    if ctrl.chipseq_controller.tools['getFPKM'] == 'y':
+        ctrl.rnaseq_controller.getFPKMpy(ctrl, script_only)
     # ChIP-seq: peak calling
-    # ctrl.chipseq_controller.macs2(ctrl, script_only)
+    ctrl.chipseq_controller.macs2(ctrl, script_only)
 
     # Quality check --------------------
     # Mappability for both RNA-seq and ChIP-seq

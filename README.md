@@ -48,15 +48,15 @@ Phase 1
   - [x] check paired-end or single-end
 - [x] [hisat2](http://daehwankimlab.github.io/hisat2/)
   - [x] check paired-end or single-end
-- [ ] [multiqc](https://multiqc.info/) (Optional)
+- [ ] [multiqc](https://multiqc.info/)
 
 Phase 2
 - [x] [samtools](http://www.htslib.org/)
-- [ ] [MACS2]()
-- [ ] [stringtie]()
-- [ ] [prepDE.py](https://ccb.jhu.edu/software/stringtie/dl/prepDE.py)
-- [ ] [getTPM.py](https://ccb.jhu.edu/software/stringtie/dl/getTPM.py)
-- [ ] [getPFKM.py](https://ccb.jhu.edu/software/stringtie/dl/getFPKM.py)  
+- [x] [MACS2]()
+- [x] [stringtie]()
+- [x] [prepDE.py](https://ccb.jhu.edu/software/stringtie/dl/prepDE.py)
+- [x] [getTPM.py](https://ccb.jhu.edu/software/stringtie/dl/getTPM.py)
+- [x] [getPFKM.py](https://ccb.jhu.edu/software/stringtie/dl/getFPKM.py)  
 - [ ] [deeptools](https://deeptools.readthedocs.io/en/develop/)
 - [ ] [bedtools](https://bedtools.readthedocs.io/en/latest/)
 
@@ -123,11 +123,25 @@ chipseq:
   bowtie2:
     -p: 16
     -t: y
+  macs2:
+    -t: DHT
+    -c: Veh
+    -f: BAM
+    -g: hs
+    -bdg: y
+  prepDE: y
+  getTPM: y
+  getFPKM: y
 
 rnaseq:
   # read alignment
   hisat2:
     -p: 16
+  stringtie:
+    -e: y
+    -B: y
+    -G: hg38_refseq_genes.gtf   
+  
 
 joint:
   # quality control
