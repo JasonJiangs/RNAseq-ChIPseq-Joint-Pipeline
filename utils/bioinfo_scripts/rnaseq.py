@@ -8,6 +8,8 @@ class RNASeq():
         self.deseq2_path = base_path + '/result/rnaseq/deseq2/'
         self.htseq_path = base_path + '/result/rnaseq/htseq/'
         self.prepDE = base_path + '/result/rnaseq/prepDE/'
+        self.getTPM = base_path + '/result/rnaseq/getTPM/'
+        self.getFPKM = base_path + '/result/rnaseq/getFPKM/'
         self.config = config
         self.tools = tools
         self.logger = logger
@@ -16,6 +18,8 @@ class RNASeq():
         dir_builder(self.deseq2_path)
         dir_builder(self.htseq_path)
         dir_builder(self.prepDE)
+        dir_builder(self.getTPM)
+        dir_builder(self.getFPKM)
         logger.parameter_log('------------------ RNASeq Load Start ------------------')
         logger.parameter_log('config: ' + str(config))
         logger.parameter_log('tools: ' + str(tools))
@@ -24,6 +28,8 @@ class RNASeq():
         logger.parameter_log('deseq2_path: ' + str(self.deseq2_path))
         logger.parameter_log('htseq_path: ' + str(self.htseq_path))
         logger.parameter_log('prepDE_path: ' + str(self.prepDE))
+        logger.parameter_log('getTPM_path: ' + str(self.getTPM))
+        logger.parameter_log('getFPKM_path: ' + str(self.getFPKM))
         logger.parameter_log('------------------ RNASeq Load Finish ------------------')
 
     def hisat2(self, ctrl, script_only):
@@ -71,12 +77,24 @@ class RNASeq():
             ctrl.logger.write_log('Only script is generated: ' + script_path)
 
     def stringtie(self, ctrl, script_only):
-        script_path = self.stringtie_path + 'stringtie.sh'
+        joint_ctrl = ctrl.joint_controller
+        script_path = ctrl.base_path + '/result/shell_script/stringtie.sh'
         general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
-                              ['gcc', 'stringtie'], 'stringtie_result')
+                              ['gcc/9.2.0', 'stringtie'], 'stringtie')
 
         module_loader(ctrl.total_script_file, ['stringtie'])
         total_shell_file = open(ctrl.total_script_file, 'a')
+        rnaseq_file_list = loop_concatanator('n', self.config['files'])
+        shell_file = open(script_path, 'a')
+        shell_file.write('for i in ' + rnaseq_file_list + '\n')
+        shell_file.write('do\n')
+        lb = lambda x, n: n if x == 'y' else ''
+        shell_file.write('stringtie ' + lb(self.tools['stringtie']['-e'], '-e ') +
+                            lb(self.tools['stringtie']['-B'], '-B ') + '-p $SLURM_CPUS_PER_TASK -G ' +
+                            ctrl.annotation_source['stringtie'] + ' -o ' + self.stringtie_path + '\"$i\"' + '.gtf ' +
+                            joint_ctrl.samtools_path + '\"$i\"' + '.sort.bam\n')
+        shell_file.write('done\n')
+        shell_file.close()
 
         if script_only == 'n':
             ctrl.logger.write_log('Start executing shell script: ' + script_path)
@@ -86,40 +104,62 @@ class RNASeq():
         else:
             ctrl.logger.write_log('Only script is generated: ' + script_path)
 
-    def prepDE(self, ctrl, script_only):
-        prepDE_path = os.getcwd() + '/tools/prepDE.py'
-        module_loader(ctrl.total_script_file, ['gcc/7.1.0', 'openmpi/3.1.4', 'python/2.7.16'])
-        total_shell_file = open(ctrl.total_script_file, 'a')
+    def prepDEpy(self, ctrl, script_only):
+        list_path = ctrl.base_path + '/result/shell_script/list_writer.txt'
+        script_path = ctrl.base_path + '/result/shell_script/prepDE.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
+                                ['gcc/7.1.0', 'openmpi/3.1.4'], 'prepDE')
+        shell_file = open(script_path, 'a')
+        shell_file.write('module load python/2.7.16\n')
+        current_pwd = os.getcwd()
+        shell_file.write('python ' + current_pwd + '/tools/prepDE.py'
+                         ' -i ' + list_path +
+                         ' -g ' + self.prepDE + 'gene_count_matrix.csv' +
+                         ' -t ' + self.prepDE + 'transcript_count_matrix.csv' +
+                         ' -l 50')
 
-        # delete prepDE_list.txt if exist
-        prepDE_list_path = self.prepDE + 'prepDE_list.txt'
-        if os.path.isfile(prepDE_list_path):
-            os.remove(prepDE_list_path)
+    def getTPMpy(self, ctrl, script_only):
+        list_path = ctrl.base_path + '/result/shell_script/list_writer.txt'
+        script_path = ctrl.base_path + '/result/shell_script/getTPM.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
+                                ['gcc/7.1.0', 'openmpi/3.1.4'], 'getTPM')
+        shell_file = open(script_path, 'a')
+        shell_file.write('module load python/2.7.16\n')
+        current_pwd = os.getcwd()
+        shell_file.write('python ' + current_pwd + '/tools/getTPM.py'
+                         ' -i ' + list_path +
+                         ' -g ' + self.prepDE + 'gene_TPM_matrix.csv' +
+                         ' -t ' + self.prepDE + 'transcript_TPM_matrix.csv' +
+                         ' -l 50')
 
-        # make prepDE_list.txt
-        prepDE_list_file = open(prepDE_list_path, 'w')
-        # get all files in stringtie_path
-        stringtie_file_list = os.listdir(self.stringtie_path)
-        for i in range(len(stringtie_file_list)):
-            file = stringtie_file_list[i]
-            if file.endswith('.gtf'):
-                file_name = file.split('.')[0]
-                if i == len(stringtie_file_list) - 1:
-                    prepDE_list_file.write(file_name + ' ' + self.stringtie_path + file)
-                else:
-                    prepDE_list_file.write(file_name + ' ' + self.stringtie_path + file + '\n')
-        prepDE_list_file.close()
+    def getFPKMpy(self, ctrl, script_only):
+        list_path = ctrl.base_path + '/result/shell_script/list_writer.txt'
+        script_path = ctrl.base_path + '/result/shell_script/getFPKM.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path,
+                                ['gcc/7.1.0', 'openmpi/3.1.4'], 'getFPKM')
+        shell_file = open(script_path, 'a')
+        shell_file.write('module load python/2.7.16\n')
+        current_pwd = os.getcwd()
+        shell_file.write('python ' + current_pwd + '/tools/getFPKM.py'
+                         ' -i ' + list_path +
+                         ' -g ' + self.prepDE + 'gene_FPKM_matrix.csv' +
+                         ' -t ' + self.prepDE + 'transcript_FPKM_matrix.csv' +
+                         ' -l 50')
 
-        total_shell_file.write('python ' + prepDE_path + ' -i ' + prepDE_list_path)
-        total_shell_file.close()
+    def list_writer(self, ctrl):
+        script_path = ctrl.base_path + '/result/shell_script/list_writer.txt'
+        # if exist, delete the old shell script
+        if os.path.exists(script_path):
+            os.remove(script_path)
+        # create execution path
+        if not os.path.exists(os.path.dirname(script_path)):
+            os.makedirs(os.path.dirname(script_path))
+        list_file = open(script_path, 'w')
+        file_list = self.config['files']
+        for item in file_list:
+            list_file.write(item + ' ' + self.stringtie_path + item + '.gtf\n')
+        list_file.close()
 
-        if script_only == 'n':
-            ctrl.logger.write_log('Start executing shell script: ' + ctrl.total_script_file)
-            linux_command = 'sbatch ' + ctrl.total_script_file
-            shell_runner(linux_command, ctrl)
-            ctrl.logger.write_log('Finish executing shell script: ' + ctrl.total_script_file)
-        else:
-            ctrl.logger.write_log('Only script is generated: ' + ctrl.total_script_file)
 
     def deseq2(self, ctrl, script_only):
         pass

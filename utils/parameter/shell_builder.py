@@ -31,6 +31,37 @@ def general_shell_builder(slurm, execution_path, log_path, module_list, file_nam
 
     shell_file.close()
 
+def anaconda_general_shell_builder(slurm, execution_path, log_path, module_list, file_name):
+    # if exist, delete the old shell script
+    if os.path.exists(execution_path):
+        os.remove(execution_path)
+
+    # create execution path
+    if not os.path.exists(os.path.dirname(execution_path)):
+        os.makedirs(os.path.dirname(execution_path))
+
+    # build general format of shell script for the path
+    shell_file = open(execution_path, 'w')
+    shell_file.write("#!/bin/bash\n")
+    shell_file.write("#SBATCH --partition=" + slurm['partition'] + "\n")
+    shell_file.write("#SBATCH --time=" + slurm['time'] + "\n")
+    shell_file.write("#SBATCH --mem=" + slurm['mem'] + "\n")
+    shell_file.write("#SBATCH --cpus-per-task=" + str(slurm['cpus-per-task']) + "\n")
+    shell_file.write("#SBATCH -A " + slurm['A'] + "\n")
+    shell_file.write("#SBATCH --job-name=" + file_name + "\n")
+    shell_file.write("#SBATCH --output=\"" + log_path + file_name + ".out\"\n\n")
+
+    shell_file.write("module load anaconda\n")
+    shell_file.write("source activate " + slurm['conda_env_name'] + "\n")
+    for item in module_list:
+        shell_file.write("conda install -c bioconda " + item + "\n")
+    shell_file.write("\n")
+
+    # build slurm log output path if not exist
+    dir_builder(log_path)
+
+    shell_file.close()
+
 
 def total_log_general_shell_builder(total_log_path, slurm):
     # if exist, delete the old shell script

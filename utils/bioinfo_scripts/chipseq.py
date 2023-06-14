@@ -59,9 +59,24 @@ class Chipseq():
             ctrl.logger.write_log('Finish executing shell script: ' + script_path)
 
     def macs2(self, ctrl, script_only):
-        script_path = self.macs2_path + 'macs2.sh'
-        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc', 'macs2'], 'macs2_result')
-
+        joint_ctrl = ctrl.joint_controller
+        script_path = ctrl.base_path + '/result/shell_script/macs2.sh'
+        general_shell_builder(ctrl.slurm, script_path, ctrl.slurm_log_path, ['gcc/9.2.0', 'macs2'], 'macs2')
+        shell_file = open(script_path, 'a')
+        lb = lambda x, n: n if x == 'y' else ''
+        shell_file.write('macs2 callpeak -t ' + joint_ctrl.samtools_path + '*.sort.bam' +
+                            ' -c ' + joint_ctrl.samtools_path + '*.sort.bam' +
+                            ' -f ' + self.tools['macs2']['-f'] + ' -g ' + self.tools['macs2']['-g'] +
+                            ' -n Replicate01' +
+                            ' --outdir ' + self.macs2_path + ' ' + lb(self.tools['macs2']['-bdg'], '-bdg'))
+        shell_file.write('\n')
+        shell_file.write('macs2 callpeak -t ' + joint_ctrl.samtools_path + '*.sort.bam' +
+                            ' -c ' + joint_ctrl.samtools_path + '*.sort.bam' +
+                            ' -f ' + self.tools['macs2']['-f'] + ' -g ' + self.tools['macs2']['-g'] +
+                            ' -n Replicate02' +
+                            ' --outdir ' + self.macs2_path + ' ' + lb(self.tools['macs2']['-bdg'], '-bdg'))
+        shell_file.write('\n')
+        shell_file.close()
         if script_only == 'n':
             ctrl.logger.write_log('Start executing shell script: ' + script_path)
             linux_command = 'sbatch ' + script_path

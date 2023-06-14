@@ -1,4 +1,4 @@
-from utils.parameter.Parser import source_file_parser
+from utils.parameter.parser import source_file_parser
 from utils.parameter.shell_builder import dir_builder, total_log_general_shell_builder
 from utils.bioinfo_scripts.joint import Joint
 from utils.bioinfo_scripts.chipseq import Chipseq
@@ -16,7 +16,7 @@ class Controller():
         self.rnaseq_source = None
         self.chipseq_source = None
         self.mapping_index_source = None
-        self.annotation_source = None
+        self.annotation_source = parameters['config_dict']['datasource']['annotation']
         self.mapping_index_list = parameters['config_dict']['datasource']['mapping-index']
         self.base_path = parameters['config_dict']['resultdestination']
         self.slurm_log_path = self.base_path + '/result/shell_log/'
@@ -84,6 +84,8 @@ class Controller():
 
 
 def phase1_execution(ctrl, script_only):
+    # fastp
+    ctrl.joint_controller.fastp(ctrl, script_only)
     # quality control before read alignment
     ctrl.joint_controller.fastqc(ctrl, 'before', script_only)
     # read alignment
@@ -98,7 +100,14 @@ def phase2_execution(ctrl, script_only):
     ctrl.joint_controller.samtools(ctrl, script_only)
     # RNA-seq: calculate RPKM for each gene and generate expression matrix
     ctrl.rnaseq_controller.stringtie(ctrl, script_only)
-    ctrl.rnaseq_controller.prepDE(ctrl, script_only)
+    # write list for prepDE.py, getTPM.py and getRPKM.py
+    ctrl.rnaseq_controller.list_writer(ctrl)
+    if ctrl.chipseq_controller.tools['prepDE'] == 'y':
+        ctrl.rnaseq_controller.prepDEpy(ctrl, script_only)
+    if ctrl.chipseq_controller.tools['getTPM'] == 'y':
+        ctrl.rnaseq_controller.getTPMpy(ctrl, script_only)
+    if ctrl.chipseq_controller.tools['getFPKM'] == 'y':
+        ctrl.rnaseq_controller.getFPKMpy(ctrl, script_only)
     # ChIP-seq: peak calling
     ctrl.chipseq_controller.macs2(ctrl, script_only)
 

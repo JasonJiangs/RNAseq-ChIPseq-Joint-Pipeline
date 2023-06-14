@@ -1,0 +1,4 @@
+gene_id,chrom,start,end,promoter_chrom,promoter_start,promoter_end,start_distance,end_distance,overlap
+THG1L,chr5,157739480,157739482,chr5,157745366,157745367,5886,5885,No
+IQCH-AS1,chr15,67520779,67520973,chr15,67522236,67522237,1457,1264,No
+SNRPB2,chr20,16741003,16741005,chr20,16747561,16747562,6558,6557,No

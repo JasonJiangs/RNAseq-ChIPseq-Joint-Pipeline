@@ -4,9 +4,10 @@ script-only: y
 # it should take the directory
 # mapping-index: mapping indexes for bowtie2, bwa, hisat2, salmon, star
 # annotation: gene annotation for hisat2, stringtie, cufflinks (.gtf, .gff, and .bed)
-datasource:
+datasource: # only support two replicates for now
   rna-seq:
-    dir_path: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
+    dir_path_original: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
+    dir_path: /scratch/pfq7pm/updated/test_pipeline/filtered_fastq/
     files:
       - LNCaP_DHT_RNA_rep1
       - LNCaP_DHT_RNA_rep2
@@ -16,7 +17,8 @@ datasource:
     paired-end: y
     suffix: .fastq.gz # fastq.gz supported only for now
   chip-seq:
-    dir_path: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
+    dir_path_original: /nv/vol190/zanglab/shared/StudentTestData/rawdata_LNCaP_AR/
+    dir_path: /scratch/pfq7pm/updated/test_pipeline/filtered_fastq/
     files:
       - LNCaP_DHT_AR_1
       - LNCaP_DHT_AR_2
@@ -29,17 +31,23 @@ datasource:
   mapping-index:
     hisat2: /nv/vol190/zanglab/zw5j/data/index/hisat2_index/hg38
     bowtie2: /nv/vol190/zanglab/zw5j/data/index/bowtie_index/bowtie2/hg38
-  annotation: /nv/vol190/zanglab/shared/StudentTestData/annotation/
+  annotation:
+    stringtie: /nv/vol190/zanglab/shared/StudentTestData/annotation/hg38_refseq_genes.gtf
+  tools:
+    prepDE: /nv/vol190/zanglab/shared/StudentTestData/tools/prepDE.py
+    getTPM: /nv/vol190/zanglab/shared/StudentTestData/tools/getTPM.py
+    getFPKM: /nv/vol190/zanglab/shared/StudentTestData/tools/getFPKM.py
 
 # Root directory for the results
 # TODO: add '/' at the end of the path
-resultdestination: /scratch/pfq7pm/test_pipeline/proj_result
+resultdestination: /scratch/pfq7pm/updated/test_pipeline
 
 # slurm configuration
 slurm:
+  conda_env_name: bioinfo_shiyu
   partition: standard
   time: '72:00:00'
-  mem: 64G
+  mem: 96G
   cpus-per-task: 16
   A: zanglab
 
@@ -53,13 +61,33 @@ chipseq:
   bowtie2:
     -p: 16
     -t: y
+  # peak calling
+  macs2:
+    -t: DHT
+    -c: Veh
+    -f: BAM
+    -g: hs
+    -bdg: y
+  prepDE: y
+  getTPM: y
+  getFPKM: y
+
 
 rnaseq:
   # read alignment
   hisat2:
     -p: 16
+  stringtie:
+    -e: y
+    -B: y
 
 joint:
+  # trimming
+  fastp:
+#    cut_by_quality3: y
+#    cut_front: y
+    cut_window_size: 5
+    cut_mean_quality: 15
   # quality control
   fastqc:
     -f: fastq

@@ -1,0 +1,3 @@
+gene_id,chrom,start,end,enhancer_chrom,enhancer_start,enhancer_end,start_distance,end_distance,overlap
+AKAP5,chr14,64469676,64469678,chr14,64467992,64467993,-1684,-1685,No
+KLK2,chr19,50878404,50880567,chr19,50869576,50869577,-8828,-10990,No
