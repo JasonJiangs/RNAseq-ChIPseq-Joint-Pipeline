@@ -1,22 +1,3 @@
-# import pandas as pd
-#
-# # Read GTF file
-# gtf = pd.read_csv('data/hg38_refseq_genes.gtf', sep='\t', comment='#', header=None)
-#
-# # get unique value of column 2
-# res = gtf[2].unique()
-#
-# # Filter for protein-coding genes
-# gtf = gtf[gtf[2] == 'mRNA']
-#
-# # Define promoter regions
-# gtf['start'] = gtf[3] - 2000
-# gtf['end'] = gtf[3] + 500
-#
-# # Write BED file
-# gtf[[0, 'start', 'end']].to_csv('promoter.bed', sep='\t', header=False, index=False)
-
-
 import pandas as pd
 
 # Read GTF file

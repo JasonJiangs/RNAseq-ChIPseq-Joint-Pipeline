@@ -1,14 +1,14 @@
 import pandas as pd
 
 # Load the differentially expressed genes into a list from a csv
-deseq_results = pd.read_csv("data/sig001/deseq2_results_sig_001_with_loc_up_down.csv")
+deseq_results = pd.read_csv("data/sig1/deseq2_results_sig_with_loc_up_down.csv")
 print("Number of differentially expressed genes: ", len(deseq_results))
 
 # Load the AR binding sites into dataframes
-AR_enhancer = pd.read_csv("data/AR_enhancer_between_2kb_10kb.bed", sep="\t", header=None, names=['chrom', 'start', 'end'])
+AR_enhancer = pd.read_csv("data/sig1/narrowPeak/AR_enhancer_between_2kb_10kb.bed_np", sep="\t", header=None, names=['chrom', 'start', 'end'])
 print("Number of AR enhancers: ", len(AR_enhancer))
 
-AR_promoter = pd.read_csv("data/AR_promoter_binding_UD2kb.bed", sep="\t", header=None, names=['chrom', 'start', 'end'])
+AR_promoter = pd.read_csv("data/sig1/narrowPeak/AR_promoter_binding_UD2kb_np.bed", sep="\t", header=None, names=['chrom', 'start', 'end'])
 print("Number of AR promoters: ", len(AR_promoter))
 
 # initialize two dataframes to hold the enhancer and promoter overlaps for up and down regulated genes respectively
@@ -106,9 +106,9 @@ print("Number of enhancers associated with at least one gene: ", sum([bool(x) fo
 print("Number of promoters associated with at least one gene: ", sum([bool(x) for x in promoter_associated_genes.values()]))
 
 # save
-enhancer_overlaps_up.to_csv("result/sig_001/enhancer_overlaps_up.csv", index=False)
-enhancer_overlaps_down.to_csv("result/sig_001/enhancer_overlaps_down.csv", index=False)
-promoter_overlaps_up.to_csv("result/sig_001/promoter_overlaps_up.csv", index=False)
-promoter_overlaps_down.to_csv("result/sig_001/promoter_overlaps_down.csv", index=False)
+enhancer_overlaps_up.to_csv("result/update/sig1/narrowPeak/enhancer_overlaps_up.csv", index=False)
+enhancer_overlaps_down.to_csv("result/update/sig1/narrowPeak/enhancer_overlaps_down.csv", index=False)
+promoter_overlaps_up.to_csv("result/update/sig1/narrowPeak/promoter_overlaps_up.csv", index=False)
+promoter_overlaps_down.to_csv("result/update/sig1/narrowPeak/promoter_overlaps_down.csv", index=False)
 
 

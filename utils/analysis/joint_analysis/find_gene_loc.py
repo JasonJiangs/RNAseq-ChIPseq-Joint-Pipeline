@@ -1,6 +1,6 @@
 # Load the DESeq2 output into a dictionary
 deseq_results = {}
-with open("data/sig001/deseq2_results_sig_001.csv", "r") as file:
+with open("data/sig1/deseq2_results_sig.csv", "r") as file:
     next(file)  # Skip header line
     for line in file:
         fields = line.strip().split(',')
@@ -34,7 +34,7 @@ for i, (gene_id, info) in enumerate(deseq_results.items()):
         break
 
 # save the results to a file
-with open("data/sig001/deseq2_results_sig_001_with_loc.csv", "w") as file:
+with open("data/sig1/deseq2_results_sig_with_loc.csv", "w") as file:
     file.write("gene_id, baseMean, log2FoldChange, lfcSE, stat, pvalue, padj, chrom, start, end\n")
     for gene_id, info in deseq_results.items():
         file.write(f"{gene_id},{','.join(info)}\n")

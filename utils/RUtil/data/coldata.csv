@@ -1,5 +1,5 @@
 sample,condition
-LNCaP_DHT_RNA_rep1_batch,treated
-LNCaP_DHT_RNA_rep2_batch,treated
-LNCaP_Veh_RNA_rep1_batch,untreated
-LNCaP_Veh_RNA_rep2_batch,untreated
+LNCaP_DHT_RNA_rep1,treated
+LNCaP_DHT_RNA_rep2,treated
+LNCaP_Veh_RNA_rep1,untreated
+LNCaP_Veh_RNA_rep2,untreated

@@ -57,11 +57,19 @@ Phase 2
 - [x] [prepDE.py](https://ccb.jhu.edu/software/stringtie/dl/prepDE.py)
 - [x] [getTPM.py](https://ccb.jhu.edu/software/stringtie/dl/getTPM.py)
 - [x] [getPFKM.py](https://ccb.jhu.edu/software/stringtie/dl/getFPKM.py)  
+- [ ] Quality Control
+    - [ ] Mapping Quality (samtools flagstat)
+    - [ ] Replicate correlation check (R & Py)
+      - [ ] Heatmap
+      - [ ] Scatter plot
+      - [ ] Table
+    - [ ] Jaccard Coefficient
+    - [ ] Principal Component Analysis
 - [ ] [deeptools](https://deeptools.readthedocs.io/en/develop/)
 - [ ] [bedtools](https://bedtools.readthedocs.io/en/latest/)
 
 Phase 3
-
+- [ ] Binding Motif Figure
 
 ### 3. Configure the configuration file
 The configuration file is `config.yaml`, in which you should store your datasource path and result path, 

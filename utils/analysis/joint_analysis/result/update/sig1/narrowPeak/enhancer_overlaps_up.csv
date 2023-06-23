@@ -1,0 +1,2 @@
+gene_id,chrom,start,end,enhancer_chrom,enhancer_start,enhancer_end,start_distance,end_distance,overlap
+MIR6076,chr14,49966399,49966511,chr14,49961910,49962131,-4489,-4380,No

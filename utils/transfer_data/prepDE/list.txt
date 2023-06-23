@@ -1,0 +1,4 @@
+LNCaP_DHT_RNA_rep1 /scratch/pfq7pm/updated/stringtie/LNCaP_DHT_RNA_rep1.gtf
+LNCaP_DHT_RNA_rep2 /scratch/pfq7pm/updated/stringtie/LNCaP_DHT_RNA_rep2.gtf
+LNCaP_Veh_RNA_rep1 /scratch/pfq7pm/updated/stringtie/LNCaP_Veh_RNA_rep1.gtf
+LNCaP_Veh_RNA_rep2 /scratch/pfq7pm/updated/stringtie/LNCaP_Veh_RNA_rep2.gtf

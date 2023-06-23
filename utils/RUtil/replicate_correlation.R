@@ -27,8 +27,6 @@ for (file_name in list.files(input_dir_path)) {
   file_path <- paste(input_dir_path, file_name, sep = "/")
   # read file
   data <- read.csv(file_path, row.names = 1)
-
-
 }
 
 # create a folder 'result' in current directory if not exist
@@ -36,7 +34,7 @@ if (!file.exists("result")) {
   dir.create("result")
 }
 
-data <- read.csv("data/transcript_count_matrix.csv", row.names = 1)
+data <- read.csv("data/gene_count_matrix.csv", row.names = 1)
 
 # Normalization
 data_norm <- cpm(data)
@@ -65,8 +63,8 @@ data_norm02 <- as.data.frame(data_norm)
 #                       "LNCaP_Veh_RNA_rep1_batch", "LNCaP_Veh_RNA_rep2_batch")
 
 # Replace 'Replicate1' and 'Replicate2' with your actual column names
-column1 <- "LNCaP_DHT_RNA_rep1_batch"
-column2 <- "LNCaP_DHT_RNA_rep2_batch"
+column1 <- "LNCaP_DHT_RNA_rep1"
+column2 <- "LNCaP_DHT_RNA_rep2"
 
 # Check if the columns exist
 if (!(column1 %in% names(data_norm02)) | !(column2 %in% names(data_norm02))) {
@@ -86,8 +84,9 @@ if (!(column1 %in% names(data_norm02)) | !(column2 %in% names(data_norm02))) {
     ggsave("result/scatter_plot01.png", plot, width = 8, height = 8)
 }
 
-column1 <- "LNCaP_Veh_RNA_rep1_batch"
-column2 <- "LNCaP_Veh_RNA_rep2_batch"
+
+column1 <- "LNCaP_Veh_RNA_rep1"
+column2 <- "LNCaP_Veh_RNA_rep2"
 
 # Check if the columns exist
 if (!(column1 %in% names(data_norm02)) | !(column2 %in% names(data_norm02))) {

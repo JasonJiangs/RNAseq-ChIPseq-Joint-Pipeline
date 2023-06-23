@@ -55,6 +55,6 @@ AR_promoter_enhancer_binding_10kb = intersect(summits, promoter_10kb)
 AR_enhancer_between_2kb_10kb = subtract(AR_promoter_enhancer_binding_10kb, AR_promoter_binding_2kb)
 
 # Save the results to BED files
-write_bed_file('test_result/AR_promoter_binding_UD2kb_np.bed', AR_promoter_binding_2kb)
-write_bed_file('test_result/AR_promoter_enhancer_binding_UD10kb_np.bed', AR_promoter_enhancer_binding_10kb)
-write_bed_file('test_result/AR_enhancer_between_2kb_10kb.bed_np', AR_enhancer_between_2kb_10kb)
+write_bed_file('test_result/update/AR_promoter_binding_UD2kb_np.bed', AR_promoter_binding_2kb)
+write_bed_file('test_result/update/AR_promoter_enhancer_binding_UD10kb_np.bed', AR_promoter_enhancer_binding_10kb)
+write_bed_file('test_result/update/AR_enhancer_between_2kb_10kb.bed_np', AR_enhancer_between_2kb_10kb)

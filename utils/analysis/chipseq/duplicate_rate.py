@@ -2,10 +2,11 @@ import pandas as pd
 
 # load the MACS2 output file
 df = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_1_PK_summits.bed', sep='\t', header=None)
-df1 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_1_PK_peaks.narrowPeak', sep='\t', header=None)
+# df = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_1_PK_peaks.narrowPeak', sep='\t', header=None)
 
 # create a new column that concatenates the chromosome, start, and end positions
 df['loc'] = df[0].astype(str) + ':' + df[1].astype(str) + '-' + df[2].astype(str)
+df['loc'] = df[0].astype(str) + ':' + df[1].astype(str)
 
 # count the total number of reads
 total_reads = df.shape[0]

@@ -6,11 +6,15 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 
 # Load the peak data for two replicates
-rep1 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_1_PK_summits.bed', sep='\t', header=None, names=['chr', 'start', 'end', 'name', 'score'])
-rep2 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_2_PK_summits.bed', sep='\t', header=None, names=['chr', 'start', 'end', 'name', 'score'])
+# rep1 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_1_PK_summits.bed', sep='\t', header=None, names=['chr', 'start', 'end', 'name', 'score'])
+# rep2 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_2_PK_summits.bed', sep='\t', header=None, names=['chr', 'start', 'end', 'name', 'score'])
+rep1 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_1_PK_peaks.narrowPeak', sep='\t', header=None, names=['chr', 'start', 'end', 'name', 'score', 'strand', 'signalValue', 'pValue', 'qValue', 'peak'])
+rep2 = pd.read_csv('../data/chipseq/macs2/LNCaP_DHT_AR_2_PK_peaks.narrowPeak', sep='\t', header=None, names=['chr', 'start', 'end', 'name', 'score', 'strand', 'signalValue', 'pValue', 'qValue', 'peak'])
+
 
 # Merge the two dataframes on the peak coordinates
-merged = pd.merge(rep1, rep2, on=['chr', 'start', 'end'], suffixes=('_rep1', '_rep2'))
+merged = pd.merge(rep1, rep2, on=['chr', 'start'], suffixes=('_rep1', '_rep2'))
+# merged2 = pd.merge(rep3, rep4, on=['chr', 'start', 'end'], suffixes=('_rep1', '_rep2'))
 
 # Calculate Pearson and Spearman correlation
 pearson_corr, _ = pearsonr(merged['score_rep1'], merged['score_rep2'])

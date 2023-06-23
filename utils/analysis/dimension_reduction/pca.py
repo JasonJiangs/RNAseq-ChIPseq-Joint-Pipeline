@@ -12,7 +12,11 @@ class DR_PCA():
         self.pca = PCA(n_components=2)
         self.data = data
         self.result = None
-        self.pca_result_dir = 'result/fpkm_pca'
+        # self.pca_result_dir = 'result/fpkm_pca'
+        # self.pca_result_dir = 'result/transcript_fpkm_pca'
+        # self.pca_result_dir = 'result/gene_count'
+        # self.pca_result_dir = 'result/transcript_count'
+        self.pca_result_dir = 'result/transcript_tpm'
 
     def scale(self):
         # log2 transformation
@@ -69,7 +73,7 @@ class DR_PCA():
 
 if __name__ == '__main__':
     # read data
-    data = pd.read_csv('../data/rnaseq/gene_fpkm_matrix.csv', index_col=0)
+    data = pd.read_csv('../data/rnaseq/transcript_tpm_matrix.csv', index_col=0)
     # drop the last two columns
     # data = data.iloc[:, :-2]
     # check correlation between first two columns

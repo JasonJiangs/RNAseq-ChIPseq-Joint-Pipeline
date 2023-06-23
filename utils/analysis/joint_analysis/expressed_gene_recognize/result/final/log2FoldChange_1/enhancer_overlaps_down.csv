@@ -1,0 +1,4 @@
+gene_id,chrom,start,end,enhancer_chrom,enhancer_start,enhancer_end,start_distance,end_distance,overlap
+CTBP1-AS,chr4,1215959,1218591,chr4,1212120,1212175,-3839,-6416,No
+AKAP5,chr14,64469676,64469678,chr14,64467739,64468233,-1937,-1445,No
+KLK2,chr19,50878404,50880567,chr19,50869409,50869769,-8995,-10798,No
