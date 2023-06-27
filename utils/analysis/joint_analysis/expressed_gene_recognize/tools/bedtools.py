@@ -17,56 +17,51 @@ def write_bed_file(filename, entries):
             file.write('\t'.join(map(str, entry)) + '\n')
 
 
-
 def intersect(a_entries, b_entries):
+    '''
+    Find the intersection of two BED files, similar to the bedtools intersect -wa command
+    :param a_entries: list of entries in the first BED file, summits
+    :param b_entries: list of entries in the second BED file, ranges
+    :return: a list of complete ranges from b_entries that has intersection with a_entries
+    '''
     print('Intersecting ' + str(len(a_entries)) + ' and ' + str(len(b_entries)) + ' entries')
+    # lambda return the larger one of two numbers
+    return_larger = lambda x, y: x if x > y else y
+    # lambda return the smaller one of two numbers
+    return_smaller = lambda x, y: x if x < y else y
     result = []
     for a_chromosome, a_start, a_end in a_entries:
+        # print(a_chromosome, a_start, a_end)
+        a_larger = return_larger(a_start, a_end)
+        a_smaller = return_smaller(a_start, a_end)
         for b_chromosome, b_start, b_end in b_entries:
+            b_larger = return_larger(b_start, b_end)
+            b_smaller = return_smaller(b_start, b_end)
             # If the entries intersect (have the same chromosome and overlapping regions)
-            if a_chromosome == b_chromosome and a_start < b_end and b_start < a_end:
-                result.append((a_chromosome, max(a_start, b_start), min(a_end, b_end)))
-
+            if a_chromosome == b_chromosome and a_smaller <= b_larger and b_smaller <= a_larger:
+                result.append((a_chromosome, a_smaller, a_larger))
     print('Length of intersection is ' + str(len(result)))
     return result
 
 
 def subtract(a_entries, b_entries):
+    '''
+    Find the subtraction of two BED files, similar to the bedtools subtract command
+    :param a_entries: list of entries in the first BED file
+    :param b_entries: list of entries in the second BED file
+    :return: list of entries in the first BED file that do not overlap with the second BED file
+    '''
     print('Subtracting ' + str(len(a_entries)) + ' and ' + str(len(b_entries)) + ' entries')
     result = []
     for a_chromosome, a_start, a_end in a_entries:
-        overlaps = []
+        if_exists = False
         for b_chromosome, b_start, b_end in b_entries:
-            if a_chromosome == b_chromosome and a_start < b_end and b_start < a_end:
-                overlaps.append((max(a_start, b_start), min(a_end, b_end)))
-        if overlaps:
-            overlaps.sort()
-            prev_end = a_start
-            for overlap_start, overlap_end in overlaps:
-                if prev_end < overlap_start:
-                    result.append((a_chromosome, prev_end, overlap_start))
-                prev_end = max(prev_end, overlap_end)
-            if prev_end < a_end:
-                result.append((a_chromosome, prev_end, a_end))
-        else:
+            # If the entries intersect (have the same chromosome and overlapping regions)
+            if a_chromosome == b_chromosome and a_start == b_start and a_end == b_end:
+                if_exists = True
+                break
+        if not if_exists:
             result.append((a_chromosome, a_start, a_end))
 
     print('Length of subtraction is ' + str(len(result)))
     return result
-
-# Load the BED files
-# summits = read_bed_file('test_data/LNCaP_DHT_AR_1_PK_peaks.narrowPeak')
-# promoter_2kb = read_bed_file('test_data/promoters_regions_UD2kb_Mod.bed')
-# promoter_10kb = read_bed_file('test_data/promoters_regions_UD10kb_Mod.bed')
-#
-# # Intersect the summits with the promoters
-# AR_promoter_binding_2kb = intersect(summits, promoter_2kb)
-# AR_promoter_enhancer_binding_10kb = intersect(summits, promoter_10kb)
-#
-# # Subtract the 2kb promoter binding from the 10kb promoter binding
-# AR_enhancer_between_2kb_10kb = subtract(AR_promoter_enhancer_binding_10kb, AR_promoter_binding_2kb)
-#
-# # Save the results to BED files
-# write_bed_file('test_result/update/AR_promoter_binding_UD2kb_np.bed', AR_promoter_binding_2kb)
-# write_bed_file('test_result/update/AR_promoter_enhancer_binding_UD10kb_np.bed', AR_promoter_enhancer_binding_10kb)
-# write_bed_file('test_result/update/AR_enhancer_between_2kb_10kb.bed_np', AR_enhancer_between_2kb_10kb)

@@ -11,13 +11,17 @@ def is_within_distance(gene_loc, binding_loc, distance):
 def is_overlapping(gene_loc, binding_loc):
     gene_chrom, gene_start, gene_end = gene_loc
     binding_chrom, binding_start, binding_end = binding_loc
-    return gene_chrom == binding_chrom and ((gene_start <= binding_start <= gene_end or gene_start <= binding_end <= gene_end) or
-                                            (binding_start <= gene_start <= binding_end or binding_start <= gene_end <= binding_end))
+    # return gene_chrom == binding_chrom and ((gene_start <= binding_start <= gene_end or gene_start <= binding_end <= gene_end) or
+    #                                         (binding_start <= gene_start <= binding_end or binding_start <= gene_end <= binding_end))
+    return gene_chrom == binding_chrom and gene_start <= binding_end and gene_end >= binding_start
 
 
-def promoter_gene_detector(deseq_result_path, promoter_region_path, result_path):
+def promoter_gene_detector(deseq_result_path, promoter_region_path, result_path, distance_tolerance):
     deseq_results = pd.read_csv(deseq_result_path)
+    print("Number of differentially expressed genes: ", len(deseq_results))
     promoter_region = pd.read_csv(promoter_region_path, sep="\t", header=None, names=['chrom', 'start', 'end'])
+    # deduplicate promoter regions
+    promoter_region = promoter_region.drop_duplicates().reset_index().drop(columns=['index'])
     print("Number of promoters regions: ", len(promoter_region))
     # divide up and down regulated genes
     promoter_overlaps_up = pd.DataFrame(columns=['gene_id', 'chrom', 'start', 'end',
@@ -57,7 +61,8 @@ def promoter_gene_detector(deseq_result_path, promoter_region_path, result_path)
                                                                                promoter_row['end'] - row['end'], 'Yes']
                     continue
 
-            if is_within_distance(gene_loc, promoter_loc, 10000):  # adjust distance as needed
+            if is_within_distance(gene_loc, promoter_loc, distance_tolerance):  # adjust distance as needed
+            # if False:
                 promoter_associated_genes[i].append(row['gene_id'])
                 # collect the information for the overlap by up or down regulated genes
                 if row['log2FoldChange'] > 0:
@@ -90,10 +95,12 @@ def promoter_gene_detector(deseq_result_path, promoter_region_path, result_path)
 
 
 
-def enhancer_gene_detector(deseq_result_path, enhancer_region_path, result_path):
+def enhancer_gene_detector(deseq_result_path, enhancer_region_path, result_path, distance_tolerance):
     deseq_results = pd.read_csv(deseq_result_path)
+    print("Number of differentially expressed genes: ", len(deseq_results))
     # Load the AR binding sites into dataframes
     enhancer_region = pd.read_csv(enhancer_region_path, sep="\t", header=None, names=['chrom', 'start', 'end'])
+    enhancer_region = enhancer_region.drop_duplicates().reset_index()
     print("Number of enhancers regions: ", len(enhancer_region))
     # divide up and down regulated genes
     enhancer_overlaps_up = pd.DataFrame(columns=['gene_id', 'chrom', 'start', 'end',
@@ -133,7 +140,8 @@ def enhancer_gene_detector(deseq_result_path, enhancer_region_path, result_path)
                                                                                enhancer_row['end'] - row['end'], 'Yes']
                     continue
 
-            if is_within_distance(gene_loc, enhancer_loc, 10000):  # adjust distance as needed
+            if is_within_distance(gene_loc, enhancer_loc, distance_tolerance):  # adjust distance as needed
+            # if False:
                 enhancer_associated_genes[i].append(row['gene_id'])
                 # collect the information for the overlap by up or down regulated genes
                 if row['log2FoldChange'] > 0:
